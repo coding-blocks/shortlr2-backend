@@ -6,6 +6,8 @@ const User = db.define('user', {
 const AuthToken = db.define('auth_token', {
 
 })
+AuthToken.belongsTo(User)
+User.hasMany(AuthToken)
 
 const URL = db.define('url', {
 
@@ -14,6 +16,9 @@ const URL = db.define('url', {
 const Event = db.define('event', {
 
 })
+
+Event.belongsTo(URL)
+URL.hasMany(Event)
 
 const URLGroup = db.define('url_group', {
 
