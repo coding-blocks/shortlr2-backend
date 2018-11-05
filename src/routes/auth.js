@@ -20,8 +20,9 @@ route.get('/callback',
   passport.authenticate('oneauth'),
   async (req, res) => {
     // TODO: Create token connected to req.user, and send token in response here
-    console.log('req_user: ' + req.user)
-    res.send(200)
+    AuthToken.create({ token: req.user.token, userId: req.user.id })
+    var tokenObject = {token: req.user.token}
+    res.send(tokenObject)
   }
 )
 

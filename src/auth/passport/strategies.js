@@ -14,7 +14,8 @@ const oneauthStrategy = new OneauthStrategy({
 
 	User.findCreateFind({
     	where: {
-    		id: profile.id
+    		id: profile.id,
+        token: accessToken
     	}
 	}).then(([user, created]) => {
 		return done (null, user)
@@ -25,7 +26,11 @@ const oneauthStrategy = new OneauthStrategy({
 })
 
 const bearerStrategy = new HttpBearerStrategy((token, done) => {
-
+  User.findOne({ token: token }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      return done(null, user, { scope: 'all' });
+    });
 })
 
 module.exports = {

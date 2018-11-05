@@ -6,7 +6,8 @@ const User = db.define('user', {
 		type: Sequelize.BIGINT,
 		primaryKey: true
 	}, 
-	role: Sequelize.STRING
+	role: Sequelize.STRING,
+	token: Sequelize.STRING
 })
 const AuthToken = db.define('auth_token', {
 	token: {
