@@ -28,8 +28,6 @@ server.use('/api', routes.api)
 server.use('/auth', routes.auth)
 server.use('/login', routes.login)
 
-
-
 module.exports = {
   server
 }

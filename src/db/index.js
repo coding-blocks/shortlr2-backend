@@ -6,7 +6,7 @@ const {
   Event
 } = require('./models')
 
-const { db } = require('./index')
+const { db } = require('./config')
 
 module.exports = {
   db,

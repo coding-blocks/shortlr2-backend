@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const passport = require('../auth/passport')
+const AuthToken = require('../db/index').AuthToken
 
 const route = Router()
 
@@ -19,6 +20,9 @@ route.get('/callback',
   passport.authenticate('oneauth'),
   async (req, res) => {
     // TODO: Create token connected to req.user, and send token in response here
+    AuthToken.create({ token: req.user.token, userId: req.user.id })
+    var tokenObject = {token: req.user.token}
+    res.send(tokenObject)
   }
 )
 
