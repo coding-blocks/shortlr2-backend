@@ -27,7 +27,9 @@
   },
   "homepage": "https://github.com/coding-blocks/shortlr2-backend#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "connect-flash": "^0.1.1",
+    "convert-radix64": "^0.2.0",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "passport": "^0.4.0",
