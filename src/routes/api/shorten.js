@@ -1,7 +1,7 @@
 const { Router } = require('express')
 
-const validUrl = require('../utils/validator').validUrl
-const shortner = require('../utils/shortner')
+const validUrl = require('../../utils/validator').validUrl
+const shortner = require('../../utils/shortner')
 
 const route = Router()
 
