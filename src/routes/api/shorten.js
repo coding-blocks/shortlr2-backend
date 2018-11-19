@@ -5,7 +5,7 @@ const shortner = require('../../utils/shortner')
 
 const route = Router()
 
-route.post('/shortcode', (req, res) => {
+route.post('/shorten', (req, res) => {
 	console.log('request:- ' + req.body)
 	let url = req.body.longUrl
 	let code = req.body.code
