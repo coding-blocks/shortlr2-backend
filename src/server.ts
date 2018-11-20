@@ -1,7 +1,10 @@
 import express from 'express'
 import hbs from 'express-hbs'
+import session from 'express-session'
 import path from 'path'
+import config = require('../config.js')
 
+import { passport } from './passport/setup'
 import { route as apiRoute } from './routes/api'
 import { route as pagesRoute } from './routes/pages'
 
@@ -24,6 +27,16 @@ app.set('views', path.join(__dirname, '../views'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 // Setup HBS engine -------- end -------
+
+// Setup Session and Passport ---------- start -----------
+app.use(
+  session({
+    secret: config.SESSION.SECRET,
+  }),
+)
+app.use(passport.initialize())
+app.use(passport.session())
+// Setup Session and Passport ---------- end -----------
 
 app.use('/api', apiRoute)
 app.use('/', pagesRoute)

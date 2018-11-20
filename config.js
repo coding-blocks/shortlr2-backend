@@ -8,5 +8,8 @@ module.exports = {
     PASSWORD: 'shortlr2',
     SYNC_ALTER: process.env.DB_SYNC_ALTER || false,
     SYNC_FORCE: process.env.DB_SYNC_FORCE || false
+  },
+  SESSION: {
+    SECRET: 'a very long session secret that you must not reveal'
   }
 }

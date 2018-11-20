@@ -1,4 +1,4 @@
-import Sequelize, { DefineModelAttributes } from 'sequelize'
+import Sequelize, { DefineModelAttributes, Model } from 'sequelize'
 import { db } from './config'
 
 export interface UserAttributes {
@@ -6,9 +6,9 @@ export interface UserAttributes {
   role: string
 }
 
-export const Users = db.define('user', {
+export const Users = db.define<UserAttributes, UserAttributes>('user', {
   role: Sequelize.STRING,
-} as DefineModelAttributes<UserAttributes>)
+})
 
 export interface URLAttributes {
   code: number
@@ -20,7 +20,7 @@ export interface URLAttributes {
   ownerId?: number
 }
 
-export const URLs = db.define('url', {
+export const URLs = db.define<URLAttributes, URLAttributes>('url', {
   code: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -50,20 +50,23 @@ export const URLs = db.define('url', {
     defaultValue: false,
   },
   ownerId: Sequelize.INTEGER,
-} as DefineModelAttributes<URLAttributes>)
+})
 
 export interface AuthTokenAttributes {
   token: string
   userId: number
 }
 
-export const AuthTokens = db.define('authToken', {
-  token: {
-    type: Sequelize.STRING(64),
-    primaryKey: true,
+export const AuthTokens = db.define<AuthTokenAttributes, AuthTokenAttributes>(
+  'authToken',
+  {
+    token: {
+      type: Sequelize.STRING(64),
+      primaryKey: true,
+    },
+    userId: Sequelize.INTEGER,
   },
-  userId: Sequelize.INTEGER,
-} as DefineModelAttributes<AuthTokenAttributes>)
+)
 
 export interface EventAttributes {
   id?: number
@@ -73,7 +76,7 @@ export interface EventAttributes {
   userId?: number
 }
 
-export const Events = db.define('event', {
+export const Events = db.define<EventAttributes, EventAttributes>('event', {
   code: Sequelize.INTEGER,
   fromIP: Sequelize.STRING,
   fromURL: Sequelize.STRING,
@@ -86,7 +89,7 @@ export interface GroupAttributes {
   ownerId?: number
 }
 
-export const Groups = db.define('group', {
+export const Groups = db.define<GroupAttributes, GroupAttributes>('group', {
   prefix: {
     type: Sequelize.STRING,
     allowNull: false,
