@@ -41,7 +41,7 @@ app.use(passport.session())
 // Setup Session and Passport ---------- end -----------
 
 app.use('/api', apiRoute)
-app.use('/', pagesRoute)
 app.use('/', express.static(path.join(__dirname, '../public')))
+app.use('/', pagesRoute)
 
 export { app }

@@ -4,6 +4,7 @@ import passport from 'passport'
 export const route = Router()
 
 route.get('/login', passport.authenticate('oneauth'))
+
 route.get(
   '/login/callback',
   passport.authenticate('oneauth', {

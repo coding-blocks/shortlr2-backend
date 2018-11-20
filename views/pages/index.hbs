@@ -1,0 +1,53 @@
+{{!< center-container }}
+
+<div class="jumbotron">
+  <h1 class="display-4">
+    Tiny URLs, Huge Impact!
+  </h1>
+  <p class="lead">
+    Welcome to <strong class="text-primary h3">cb.lk</strong>,
+    the popular URL shortener
+    - made with ❤️ by
+    <a class="text-black-50" href="https://codingblocks.com">Coding Blocks</a>
+  </p>
+  <hr class="my-4">
+  <p>
+    Creating easy to use short links is something we all need. We made <b>cb.lk</b>
+    at Coding Blocks initially because of our own needs to create inbound marketing links,
+    sharing code snippets with students, and give access to content distributed during
+    workshops.
+  </p>
+  <p>
+    With <a href="https://goo.gl">goo.gl</a> having shut down and most unique single word
+    links at <a href="https://bit.ly">bit.ly</a> having run out, we have made <b><u>cb.lk</u></b>
+    open for anyone to use. Only one catch - you need to login using a Coding Blocks account.
+  </p>
+  <a class="btn btn-outline-primary btn-lg mx-4 my-1" href="https://codingblocks.com" role="button">
+    ← Go to Coding Blocks homepage<span id="timer"> in 5</span>
+  </a>
+  <a class="btn btn-outline-dark btn-lg mx-4 my-1" href="/urls" role="button">
+    Create Shortlinks →
+  </a>
+</div>
+
+<script>
+  let timebomb = 5
+  let timer = document.getElementById('timer')
+  let ticker = setInterval(() => {
+    timebomb--
+    if (timebomb <= 0) {
+      window.location.href = 'https://codingblocks.com'
+      clearInterval(ticker)
+    }
+    timer.innerText = ' in ' + timebomb
+  }, 1000)
+  timer.parentElement.addEventListener('mouseover', () => {
+    clearInterval(ticker)
+    timer.remove()
+  })
+  timer.parentElement.nextElementSibling.addEventListener
+  ('mouseover', () => {
+    clearInterval(ticker)
+    timer.remove()
+  })
+</script>

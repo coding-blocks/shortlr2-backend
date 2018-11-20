@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "connect-ensure-login": "^0.1.1",
     "debug": "^4.1.0",
     "express": "^4.16.4",
     "express-flash": "^0.0.2",
@@ -31,6 +32,7 @@
     "lint:fix": "tslint --fix --project ."
   },
   "devDependencies": {
+    "@types/connect-ensure-login": "^0.1.4",
     "@types/debug": "^0.0.31",
     "@types/express": "^4.16.0",
     "@types/express-flash": "^0.0.0",
