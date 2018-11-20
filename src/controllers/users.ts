@@ -20,7 +20,11 @@ export const createUser = async (newUser: {
   role: UserRole
 }) => {
   try {
-    return await Users.create(newUser)
+    const [user, created] = await Users.findCreateFind({
+      defaults: newUser,
+      where: { id: newUser.id },
+    })
+    return user
   } catch (e) {
     // TODO: Raven
     throw e
