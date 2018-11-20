@@ -3,7 +3,7 @@ import passport from 'passport'
 import { OneauthProfile, Strategy as OneauthStrategy } from 'passport-oneauth'
 import * as path from 'path'
 import config = require('../../config.js')
-import { createUser, findUserById } from '../controllers/users'
+import { findCreateFindUser, findUserById } from '../controllers/users'
 import { UserAttributes, UserRole } from '../db/models'
 
 const log = debug('shortlr:auth:oneauth')
@@ -35,7 +35,7 @@ passport.use(
     },
     async (accessToken, refreshToken, profile: OneauthProfile, done) => {
       try {
-        const user = await createUser({
+        const user = await findCreateFindUser({
           id: Number(profile.id),
           username: profile.username,
           role: (profile.role || 'user') as UserRole,

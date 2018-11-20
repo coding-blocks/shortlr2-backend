@@ -10,29 +10,41 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarRight">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link">Homepage</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link">Online Courses</a>
-      </li>
+      {{#if loggedIn}}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="shortLinksMenu" role="button"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ShortLinks
+          </a>
+          <div class="dropdown-menu" aria-labelledby="shortLinksMenu">
+            <a class="dropdown-item" href="#">My Shortlinks</a>
+            <a class="dropdown-item" href="#">Create New</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Stats</a>
+          </div>
+        </li>
+      {{/if}}
     </ul>
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="shortLinksMenu" role="button"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          ShortLinks
-        </a>
-        <div class="dropdown-menu" aria-labelledby="shortLinksMenu">
-          <a class="dropdown-item" href="#">My Shortlinks</a>
-          <a class="dropdown-item" href="#">Create New</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Stats</a>
-        </div>
-      </li>
+    <ul class="navbar-nav ml-auto mr-4">
       <li class="nav-item">
-        <a class="nav-link">Profile</a>
+        <a href="https://codingblocks.com" class="nav-link">Classroom Courses</a>
       </li>
+      <li class="nav-item mr-4">
+        <a href="https://online.codingblocks.com" class="nav-link">Online Courses</a>
+      </li>
+      {{#if loggedIn}}
+        <li class="nav-item">
+          <a href="https://account.codingblocks.com" class="nav-link">😎 Profile</a>
+        </li>
+        <li class="nav-item">
+          <a href="https://account.codingblocks.com" class="nav-link">🔓 Logout</a>
+        </li>
+      {{else}}
+        <li class="nav-item">
+          <a href="/login" class="nav-link">🔐 Login</a>
+        </li>
+      {{/if}}
+
     </ul>
   </div>
 

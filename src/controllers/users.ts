@@ -13,7 +13,7 @@ export const findUserById = async userId => {
   }
 }
 
-export const createUser = async (newUser: {
+export const findCreateFindUser = async (newUser: {
   id: number
   username: string
   name?: string
