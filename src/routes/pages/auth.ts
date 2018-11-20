@@ -3,10 +3,11 @@ import passport from 'passport'
 
 export const route = Router()
 
+route.get('/login', passport.authenticate('oneauth'))
 route.get(
-  '/login',
+  '/login/callback',
   passport.authenticate('oneauth', {
-    failureRedirect: '/404',
+    failureRedirect: '/admin',
     failureFlash: 'Error Logging In',
     successReturnToOrRedirect: '/admin',
   }),

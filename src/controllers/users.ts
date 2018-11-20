@@ -1,4 +1,4 @@
-import { UserAttributes, Users } from '../db/models'
+import { UserRole, Users } from '../db/models'
 
 export const findUserById = async userId => {
   try {
@@ -7,6 +7,20 @@ export const findUserById = async userId => {
       throw new Error('Could not find user')
     }
     return user
+  } catch (e) {
+    // TODO: Raven
+    throw e
+  }
+}
+
+export const createUser = async (newUser: {
+  id: number
+  username: string
+  name?: string
+  role: UserRole
+}) => {
+  try {
+    return await Users.create(newUser)
   } catch (e) {
     // TODO: Raven
     throw e

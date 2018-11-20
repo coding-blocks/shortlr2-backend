@@ -1,7 +1,8 @@
 const secrets = require('./secrets')
 module.exports = {
   SERVER: {
-    PORT: process.env.PORT || 3987
+    PORT: process.env.PORT || 3987,
+    URL: 'http://localhost:3987' // TODO: Fix properly
   },
   DB: {
     DATABASE: 'shortlr2',
@@ -15,6 +16,7 @@ module.exports = {
   },
   ONEAUTH: {
     CLIENT_ID: secrets.ONEAUTH_CLIENT_ID,
-    CLIENT_SECRET: secrets.ONEAUTH_CLIENT_SECRET
+    CLIENT_SECRET: secrets.ONEAUTH_CLIENT_SECRET,
+    CALLBACK_URL: '/login/callback'
   }
 }

@@ -1,13 +1,22 @@
 import Sequelize, { DefineModelAttributes, Model } from 'sequelize'
 import { db } from './config'
 
+export type UserRole = 'admin' | 'employee' | 'intern' | 'user'
 export interface UserAttributes {
   id?: number
-  role: string
+  username: string
+  name?: string
+  role: UserRole
 }
 
 export const Users = db.define<UserAttributes, UserAttributes>('user', {
-  role: Sequelize.STRING,
+  role: Sequelize.ENUM(['admin', 'employee', 'intern', 'user']),
+  username: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  name: Sequelize.STRING,
 })
 
 export interface URLAttributes {
