@@ -64,3 +64,6 @@ typings/
 # IDEs
 .idea/
 .vscode/
+
+# Secrets
+/secrets.json

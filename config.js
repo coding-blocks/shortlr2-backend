@@ -1,3 +1,4 @@
+const secrets = require('./secrets')
 module.exports = {
   SERVER: {
     PORT: process.env.PORT || 3987
@@ -11,5 +12,9 @@ module.exports = {
   },
   SESSION: {
     SECRET: 'a very long session secret that you must not reveal'
+  },
+  ONEAUTH: {
+    CLIENT_ID: secrets.ONEAUTH_CLIENT_ID,
+    CLIENT_SECRET: secrets.ONEAUTH_CLIENT_SECRET
   }
 }
