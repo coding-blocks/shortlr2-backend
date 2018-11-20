@@ -1,4 +1,5 @@
 import express from 'express'
+import flash from 'express-flash'
 import hbs from 'express-hbs'
 import session from 'express-session'
 import path from 'path'
@@ -34,6 +35,7 @@ app.use(
     secret: config.SESSION.SECRET,
   }),
 )
+app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 // Setup Session and Passport ---------- end -----------
