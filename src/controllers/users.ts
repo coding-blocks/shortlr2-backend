@@ -1,4 +1,4 @@
-import { UserRole, Users } from '../db/models'
+import { UserRole, Users } from '../db'
 
 export const findUserById = async userId => {
   try {

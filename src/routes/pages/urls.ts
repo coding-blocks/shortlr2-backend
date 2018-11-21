@@ -14,3 +14,7 @@ route.get('/', (req, res) => {
 route.get('/new', (req, res) => {
   return res.render('pages/urls/new')
 })
+
+route.post('/', (req, res) => {
+
+})

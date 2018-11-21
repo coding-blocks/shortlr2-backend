@@ -1,5 +1,13 @@
 export { db } from './config'
 import { AuthTokens, Events, Groups, URLs, Users } from './models'
+export {
+  UserAttributes,
+  GroupAttributes,
+  EventAttributes,
+  AuthTokenAttributes,
+  URLAttributes,
+  UserRole,
+} from './models'
 
 // Run associations
 

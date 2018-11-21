@@ -4,7 +4,7 @@ import { OneauthProfile, Strategy as OneauthStrategy } from 'passport-oneauth'
 import * as path from 'path'
 import config = require('../../config.js')
 import { findCreateFindUser, findUserById } from '../controllers/users'
-import { UserAttributes, UserRole } from '../db/models'
+import { UserAttributes, UserRole } from '../db'
 
 const log = debug('shortlr:auth:oneauth')
 
