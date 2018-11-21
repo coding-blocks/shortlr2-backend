@@ -8,7 +8,9 @@ export const route = Router()
 route.use(ensureLoggedIn('/login'))
 
 route.get('/', (req, res) => {
-  if (req.user) {
-    return res.render('pages/urls/index')
-  }
+  return res.render('pages/urls/index')
+})
+
+route.get('/new', (req, res) => {
+  return res.render('pages/urls/new')
 })

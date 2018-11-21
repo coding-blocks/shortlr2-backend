@@ -8,6 +8,7 @@ import config = require('../config.js')
 import { passport } from './passport/setup'
 import { route as apiRoute } from './routes/api'
 import { route as pagesRoute } from './routes/pages'
+import { ifcontains, ifeq } from './utils/handlebar-helpers'
 
 const app = express()
 
@@ -22,12 +23,14 @@ app.engine(
 )
 app.set('view engine', 'hbs')
 app.set('views', path.join(__dirname, '../views'))
+hbs.registerHelper('ifeq', ifeq)
+hbs.registerHelper('ifcontains', ifcontains)
 // Setup HBS engine -------- end -------
 
-// Setup HBS engine -------- start -------
+// Setup Body parsers -------- start -------
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-// Setup HBS engine -------- end -------
+// Setup Body parsers -------- end -------
 
 // Setup Session and Passport ---------- start -----------
 app.use(
