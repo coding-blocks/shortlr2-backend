@@ -19,3 +19,7 @@ export function ifcontains(arr, predicate, options) {
   // @ts-ignore
   return options.inverse(this)
 }
+
+export function inc(value, options) {
+  return parseInt(value) + 1
+}

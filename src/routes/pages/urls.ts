@@ -1,15 +1,16 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
-import { createUrl, findByShortcode } from '../../controllers/urls'
+import { createUrl, findByShortcode, getAllUrlsForUser } from '../../controllers/urls'
 
 export const route = Router()
 
 // The entire URLs area is for logged in people only
 route.use(ensureLoggedIn('/login'))
 
-route.get('/', (req, res) => {
-  return res.render('pages/urls/index')
+route.get('/', async (req, res) => {
+  const urls = await getAllUrlsForUser(req.user)
+  return res.render('pages/urls/index', { urls })
 })
 
 route.get('/new', (req, res) => {

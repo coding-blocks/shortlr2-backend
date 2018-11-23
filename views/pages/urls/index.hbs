@@ -1,1 +1,20 @@
 {{!< center-container }}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>S.No.</th>
+            <th>Actual URL</th>
+            <th>Shortened URL</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each urls}}
+            <tr>
+                <td>{{ inc @index }}</td>
+                <td>{{ this.longUrl }}</td>
+                <td><a href="https://cb.lk/{{ this.codeActual }}"> cb.lk/{{ this.codeActual }} </a></td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
