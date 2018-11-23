@@ -1,4 +1,6 @@
 import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
+import { genRandomShortcode } from '../utils/shortener'
+import { expandFromShortcode } from '../utils/expander'
 
 export interface URLOptions {
   longUrl: string
@@ -30,5 +32,31 @@ export const createUrl = async (
         },
       })
     }
+  } else {
+    // Create Random Shortcode
+    const shortCode = genRandomShortcode()
+    const url = await URLs.create({
+      ownerId: user.id,
+      code: shortCode.codeInt,
+      codeStr: shortCode.codeStr,
+      codeActual: shortCode.codeActual,
+      hits: 0,
+      longUrl: urlOptions.longUrl,
+      private: false, // TODO: Add support for making private links
+    })
+    return url
   }
+}
+
+export const findByShortcode = async (shortCode: string) => {
+  const urlOptions = expandFromShortcode(shortCode)
+  const url = await URLs.findOne({
+    where: {
+      code: urlOptions.codeInt,
+    },
+  })
+  if (!url) {
+    throw new Error('Could not find shortcode.')
+  }
+  return url!
 }

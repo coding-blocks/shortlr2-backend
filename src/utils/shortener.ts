@@ -1,7 +1,7 @@
 import * as r from 'convert-radix64'
 import { GroupAttributes } from '../db'
 
-interface ShortcodeOptions {
+export interface ShortcodeOptions {
   codeInt: number
   codeStr: string
   codeActual: string

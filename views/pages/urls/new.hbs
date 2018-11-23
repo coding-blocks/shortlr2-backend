@@ -7,39 +7,43 @@
     <p class="text-black-50">
       Create a tiny new link. Grab eyeballs!
     </p>
-    <form> <!-- TODO: Add validation -->
-      <form class="form-group">
+    <form class="form-group" action="/urls" method="post"> <!-- TODO: Add validation -->
 
+      <div class="form-group">
+        <label class="ml-2" for="longUrl">URL to shorten</label>
+        <input type="url" class="form-control" id="longUrl"
+               name="longUrl" required
+               aria-required="true" aria-describedby="longUrlHelp"
+               placeholder="eg. https://codingblocks.com/classroom-courses">
+        <small id="longUrlHelp" class="form-text text-muted">We shorten only http and https links</small>
+      </div>
+
+      {{#ifcontains "admin,employee,intern" user.role}}
         <div class="form-group">
-          <label class="ml-2" for="longUrl">URL to shorten</label>
-          <input type="url" class="form-control" id="longUrl" required
-                 aria-required="true" aria-describedby="longUrlHelp"
-                 placeholder="eg. https://codingblocks.com/classroom-courses">
-          <small id="longUrlHelp" class="form-text text-muted">We shorten only http and https links</small>
-        </div>
-
-        {{#ifcontains "admin,employee,intern" user.role}}
-          <div class="form-group">
-            <label class="ml-2" for="shortCode">ShortCode (optional)</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">cb.lk/</span>
-              </div>
-              <input type="text" class="form-control"
-                     id="shortCode" aria-describedby="shortCodeHelo"
-                     placeholder="mylink">
+          <label class="ml-2" for="shortCode">ShortCode (optional)</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">cb.lk/</span>
             </div>
-            <small id="shortCodeHelo" class="form-text text-muted">
-              Leave empty to get random code
-              <br>
-              Either single word https://cb.lk/mylink or group like
-              https://cb.lk/group/mylink
-              Shortcode has to be less than 9 characters
-            </small>
+            <input type="text" class="form-control"
+                   name="shortCode"
+                   id="shortCode" aria-describedby="shortCodeHelo"
+                   placeholder="mylink">
           </div>
-        {{/ifcontains}}
-
-      </form>
+          <small id="shortCodeHelo" class="form-text text-muted">
+            Leave empty to get random code
+            <br>
+            Either single word https://cb.lk/mylink or group like
+            https://cb.lk/group/mylink
+            Shortcode has to be less than 9 characters
+          </small>
+        </div>
+      {{/ifcontains}}
+      <div class="row px-2">
+        <button class="btn btn-dark col-3" type="reset">Reset ⓧ </button>
+        <div class="col"></div>
+        <button class="btn btn-primary col-8" type="submit">Create →</button>
+      </div>
     </form>
   </div>
   <div class="col"></div>
