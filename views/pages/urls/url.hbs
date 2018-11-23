@@ -1,5 +1,37 @@
 {{!< center-container }}
 
-{{ url.codeActual }}
-{{ url.hits }}
-{{ url.longUrl }}
+<div class="row">
+  <div class="col"></div>
+  <div class="col-sm-10 col-md-8 col-lg-6">
+    <div class="card text-center">
+      <div class="card-body">
+        <h1 class="card-title font-weight-light">
+          <a href="https://cb.lk/{{url.codeActual}}">
+            cb.lk/{{ url.codeActual }}
+          </a>
+        </h1>
+        <p class="card-subtitle text-muted">
+          Right-click and select "Copy Link Location" to copy short link
+        </p>
+        <p class="card-text mt-4">
+          Original URL
+          <br>
+          <a href="{{url.longUrl}}">
+            {{url.longUrl}}
+          </a>
+        </p>
+      </div>
+      <div class="card-footer">
+        <div class="card-subtitle">
+            <span class="text-muted h4">
+              Total Link Clicks :
+            </span>
+          <span class="h2">
+            {{ url.hits }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col"></div>
+</div>
