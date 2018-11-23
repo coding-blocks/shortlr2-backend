@@ -60,3 +60,12 @@ export const findByShortcode = async (shortCode: string) => {
   }
   return url!
 }
+
+export const getAllUrlsForUser = async (user: UserAttributes) => {
+  const urls = await URLs.findAll({
+    where: {
+      ownerId: user.id,
+    },
+  })
+  return urls!
+}
