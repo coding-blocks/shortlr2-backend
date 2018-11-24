@@ -7,6 +7,12 @@ export interface URLOptions {
   shortCode?: string
 }
 
+export interface URLUpdateOptions {
+  code: number
+  longUrl?: string
+  hits?: number
+}
+
 export const createUrl = async (
   urlOptions: URLOptions,
   user: UserAttributes,
@@ -46,6 +52,18 @@ export const createUrl = async (
     })
     return url
   }
+}
+
+export const updateUrl = async (newUrlOptions: URLUpdateOptions) => {
+  const updatedUrl = await URLs.update(newUrlOptions, {
+    where: {
+      code: newUrlOptions.code
+    }
+  })
+  if (!updatedUrl) {
+    throw new Error('Could not find URL.')
+  }
+  return updatedUrl!
 }
 
 export const findByShortcode = async (shortCode: string) => {
