@@ -1,6 +1,6 @@
 import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
-import { genRandomShortcode } from '../utils/shortener'
 import { expandFromShortcode } from '../utils/expander'
+import { genRandomShortcode } from '../utils/shortener'
 
 export interface URLOptions {
   longUrl: string

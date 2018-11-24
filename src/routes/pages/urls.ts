@@ -1,7 +1,11 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
-import { createUrl, findByShortcode, getAllUrlsForUser } from '../../controllers/urls'
+import {
+  createUrl,
+  findByShortcode,
+  getAllUrlsForUser,
+} from '../../controllers/urls'
 
 export const route = Router()
 
