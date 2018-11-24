@@ -7,10 +7,16 @@ export interface URLOptions {
   shortCode?: string
 }
 
-export interface URLUpdateOptions {
-  code: number
-  longUrl?: string
-  hits?: number
+export interface LimitingOptions {
+  offset: number
+  limit: number
+}
+
+export interface PaginationOptions {
+  page: number
+  pageCount: number
+  hasNext: boolean
+  hasPrev: boolean
 }
 
 export const createUrl = async (
@@ -54,18 +60,6 @@ export const createUrl = async (
   }
 }
 
-export const updateUrl = async (newUrlOptions: URLUpdateOptions) => {
-  const updatedUrl = await URLs.update(newUrlOptions, {
-    where: {
-      code: newUrlOptions.code
-    }
-  })
-  if (!updatedUrl) {
-    throw new Error('Could not find URL.')
-  }
-  return updatedUrl!
-}
-
 export const findByShortcode = async (shortCode: string) => {
   const urlOptions = expandFromShortcode(shortCode)
   const url = await URLs.findOne({
@@ -79,11 +73,22 @@ export const findByShortcode = async (shortCode: string) => {
   return url!
 }
 
-export const getAllUrlsForUser = async (user: UserAttributes) => {
-  const urls = await URLs.findAll({
+export const getAllUrlsForUser = async (
+  user: UserAttributes, 
+  limit: LimitingOptions
+) => {
+  const options = {
     where: {
       ownerId: user.id,
     },
-  })
-  return urls!
+    ...limit
+  }
+  const [urls, urlCount] = await Promise.all([URLs.findAll(options), URLs.count()])
+  const pagination: PaginationOptions = {
+    page: Math.floor(limit.offset / 20) + 1,
+    pageCount: Math.ceil(urlCount / 20),
+    hasPrev: limit.offset !== 0,
+    hasNext: limit.offset < (urlCount - 20)
+  }
+  return [urls!, pagination]
 }

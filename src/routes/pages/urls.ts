@@ -1,16 +1,28 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
-import { createUrl, findByShortcode, getAllUrlsForUser } from '../../controllers/urls'
+import { createUrl, findByShortcode, getAllUrlsForUser, LimitingOptions} from '../../controllers/urls'
 
 export const route = Router()
 
 // The entire URLs area is for logged in people only
 route.use(ensureLoggedIn('/login'))
 
+// Pagination middleware
+route.use((req, res, next) => {
+  const LIMIT = 20
+  if (req.query.page <= 0) req.query.page = 1
+  req.query.limit = LIMIT
+  next()
+})
+
 route.get('/', async (req, res) => {
-  const urls = await getAllUrlsForUser(req.user)
-  return res.render('pages/urls/index', { urls })
+  const limit: LimitingOptions = {
+    offset: req.query.limit * (req.query.page - 1),
+    limit:  req.query.limit
+  }
+  const [urls, pagination] = await getAllUrlsForUser(req.user, limit)
+  return res.render('pages/urls/index', { urls, pagination })
 })
 
 route.get('/new', (req, res) => {

@@ -1,5 +1,19 @@
 {{!< center-container }}
 
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        <li class="page-item {{#unless pagination.hasPrev}}disabled{{/unless}}">
+            <a class="page-link" href="?page={{ dec pagination.page }}" tabindex="-1">Previous</a>
+        </li>
+        {{#range pagination.pageCount}}
+            <li class="page-item"><a class="page-link" href="?page={{ counter }}">{{ counter }}</a></li>
+        {{/range}}
+        <li class="page-item {{#unless pagination.hasNext}}disabled{{/unless}}">
+            <a class="page-link" href="?page={{ inc pagination.page }}">Next</a>
+        </li>
+    </ul>
+</nav>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -12,7 +26,7 @@
         {{#each urls}}
             <tr>
                 <td>{{ inc @index }}</td>
-                <td>{{ this.longUrl }}</td>
+                <td><a href="/urls/{{ this.codeActual }}"> {{ this.longUrl }} </a></td>
                 <td><a href="https://cb.lk/{{ this.codeActual }}"> cb.lk/{{ this.codeActual }} </a></td>
             </tr>
         {{/each}}

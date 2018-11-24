@@ -23,3 +23,15 @@ export function ifcontains(arr, predicate, options) {
 export function inc(value, options) {
   return parseInt(value) + 1
 }
+
+export function dec(value, options) {
+  return parseInt(value) - 1
+}
+
+export function range(value, options) {
+  var ret = ""
+  for (let i=1; i<=value; i++){
+    ret += options.fn({counter: i})
+  }
+  return ret
+}
