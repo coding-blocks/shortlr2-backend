@@ -8,13 +8,13 @@ route.get('/:code', async (req, res) => {
   try {
     const url = await findByShortcode(req.params.code)
     // TODO: verify when to increment hits
+    res.redirect(url.longUrl)
     // @ts-ignore
     URLs.increment('hits', {
       where: {
         code: url.code
       }
     })
-    return res.redirect(url.longUrl)
   } catch (e) {
     // TODO: Raven
     req.flash('error', e.message)
