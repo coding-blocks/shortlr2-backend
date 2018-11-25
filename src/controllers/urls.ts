@@ -1,5 +1,9 @@
 import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
-import { genRandomShortcode, urlOptsFromShortcode } from '../utils/shortener'
+import {
+  genRandomShortcode,
+  optsFromGroupedShortcode,
+  optsFromShortcode,
+} from '../utils/shortener'
 
 export interface URLOptions {
   longUrl: string
@@ -17,6 +21,7 @@ export const createUrl = async (
 
   if (urlOptions.shortCode) {
     if (urlOptions.shortCode.indexOf('/') !== -1) {
+      // We need to create a grouped short code
       const splitShortCode = urlOptions.shortCode.split('/')
       if (splitShortCode.length > 2) {
         throw new Error('Invalid shortcode syntax')
@@ -33,12 +38,12 @@ export const createUrl = async (
     }
   } else {
     // Create Random Shortcode
-    const shortCode = genRandomShortcode()
+    const opts = genRandomShortcode()
     const url = await URLs.create({
       ownerId: user.id,
-      code: shortCode.codeInt,
-      codeStr: shortCode.codeStr,
-      codeActual: shortCode.codeActual,
+      code: opts.codeInt,
+      codeStr: opts.codeStr,
+      codeActual: opts.codeActual,
       hits: 0,
       longUrl: urlOptions.longUrl,
       private: false, // TODO: Add support for making private links
@@ -48,10 +53,10 @@ export const createUrl = async (
 }
 
 export const findUrlByShortcode = async (shortCode: string) => {
-  const urlOptions = urlOptsFromShortcode(shortCode)
+  const opts = optsFromShortcode(shortCode)
   const url = await URLs.findOne({
     where: {
-      code: urlOptions.codeInt,
+      code: opts.codeInt,
     },
   })
   if (!url) {

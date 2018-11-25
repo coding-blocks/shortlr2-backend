@@ -3,7 +3,7 @@ import { Router } from 'express'
 import passport from 'passport'
 import {
   createUrl,
-  findByShortcode,
+  findUrlByShortcode,
   getAllUrlsForUser,
 } from '../../controllers/urls'
 
@@ -23,7 +23,7 @@ route.get('/new', (req, res) => {
 
 route.get('/:url', async (req, res) => {
   try {
-    const url = await findByShortcode(req.params.url)
+    const url = await findUrlByShortcode(req.params.url)
     return res.render('pages/urls/url', { url })
   } catch (e) {
     // TODO: Raven

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { findGroupByPrefix } from '../../controllers/groups'
 import { findUrlByCodeInt, findUrlByShortcode } from '../../controllers/urls'
-import { urlOptsFromGroupedShortcode } from '../../utils/shortener'
+import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
 
@@ -22,8 +22,8 @@ route.get('/:group/:code', async (req, res) => {
     if (!group) {
       throw new Error('URL Group prefix not found. Wrong URL possibly.')
     }
-    const urlOpts = urlOptsFromGroupedShortcode(group, req.params.code)
-    const url = await findUrlByCodeInt(urlOpts.codeInt)
+    const opts = optsFromGroupedShortcode(group, req.params.code)
+    const url = await findUrlByCodeInt(opts.codeInt)
     if (!url) {
       throw new Error('Shortcode not found')
     }
