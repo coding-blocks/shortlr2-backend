@@ -12,6 +12,18 @@ export interface URLOptions {
   shortCode?: string
 }
 
+export interface LimitingOptions {
+  offset: number
+  limit: number
+}
+
+export interface PaginationOptions {
+  page: number
+  pageCount: number
+  hasNext: boolean
+  hasPrev: boolean
+}
+
 export const createUrl = async (
   urlOptions: URLOptions,
   user: UserAttributes,
@@ -84,11 +96,22 @@ export const findUrlByCodeInt = async (codeInt: number) =>
     },
   })
 
-export const getAllUrlsForUser = async (user: UserAttributes) => {
-  const urls = await URLs.findAll({
+export const getAllUrlsForUser = async (
+  user: UserAttributes, 
+  limit: LimitingOptions
+) => {
+  const options = {
     where: {
       ownerId: user.id,
     },
-  })
-  return urls!
+    ...limit
+  }
+  const [urls, urlCount] = await Promise.all([URLs.findAll(options), URLs.count()])
+  const pagination: PaginationOptions = {
+    page: Math.floor(limit.offset / 20) + 1,
+    pageCount: Math.ceil(urlCount / 20),
+    hasPrev: limit.offset !== 0,
+    hasNext: limit.offset < (urlCount - 20)
+  }
+  return [urls!, pagination]
 }
