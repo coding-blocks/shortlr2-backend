@@ -1,6 +1,5 @@
 import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
-import { expandFromShortcode } from '../utils/expander'
-import { genRandomShortcode } from '../utils/shortener'
+import { genRandomShortcode, urlOptsFromShortcode } from '../utils/shortener'
 
 export interface URLOptions {
   longUrl: string
@@ -48,8 +47,8 @@ export const createUrl = async (
   }
 }
 
-export const findByShortcode = async (shortCode: string) => {
-  const urlOptions = expandFromShortcode(shortCode)
+export const findUrlByShortcode = async (shortCode: string) => {
+  const urlOptions = urlOptsFromShortcode(shortCode)
   const url = await URLs.findOne({
     where: {
       code: urlOptions.codeInt,

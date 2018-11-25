@@ -26,7 +26,10 @@ export function genRandomShortcode(): ShortcodeOptions {
   }
 }
 
-export function genSpecifiedShortcode(requiredCode: string): ShortcodeOptions {
+export function urlOptsFromShortcode(requiredCode: string): ShortcodeOptions {
+  if (requiredCode.length > 9) {
+    throw new Error('Shortcodes larger than 9 characters not supported')
+  }
   return {
     codeStr: requiredCode,
     codeActual: requiredCode,
@@ -34,7 +37,7 @@ export function genSpecifiedShortcode(requiredCode: string): ShortcodeOptions {
   }
 }
 
-export function genGroupedShortcode(
+export function urlOptsFromGroupedShortcode(
   group: GroupAttributes,
   code: string,
 ): ShortcodeOptions {
