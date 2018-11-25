@@ -60,6 +60,13 @@ export const findUrlByShortcode = async (shortCode: string) => {
   return url!
 }
 
+export const findUrlByCodeInt = async (codeInt: number) =>
+  URLs.findOne({
+    where: {
+      code: codeInt,
+    },
+  })
+
 export const getAllUrlsForUser = async (user: UserAttributes) => {
   const urls = await URLs.findAll({
     where: {
