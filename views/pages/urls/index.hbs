@@ -12,7 +12,7 @@
         {{#each urls}}
             <tr>
                 <td>{{ inc @index }}</td>
-                <td>{{ this.longUrl }}</td>
+                <td><a href="/urls/{{ this.codeActual }}"> {{ this.longUrl }} </a></td>
                 <td><a href="https://cb.lk/{{ this.codeActual }}"> cb.lk/{{ this.codeActual }} </a></td>
             </tr>
         {{/each}}

@@ -2,13 +2,20 @@ import { Router } from 'express'
 import { findGroupByPrefix } from '../../controllers/groups'
 import { findUrlByCodeInt, findUrlByShortcode } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
+import { URLs } from '../../db'
 
 export const route = Router()
 
 route.get('/:code', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.code)
-    return res.redirect(url.longUrl)
+    res.redirect(url.longUrl)
+    // @ts-ignore
+    URLs.increment('hits', {
+      where: {
+        code: url.code
+      }
+    })
   } catch (e) {
     // TODO: Raven
     req.flash('error', e.message)
@@ -28,6 +35,12 @@ route.get('/:group/:code', async (req, res) => {
       throw new Error('Shortcode not found')
     }
     res.redirect(url.longUrl)
+    // @ts-ignore
+    URLs.increment('hits', {
+      where: {
+        code: url.code
+      }
+    })
   } catch (e) {
     // TODO: Raven
     req.flash('error', e.message)
