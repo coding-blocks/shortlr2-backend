@@ -1,4 +1,4 @@
-import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
+import { Groups, URLAttributes, URLs, UserAttributes, GroupAttributes } from '../db'
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
@@ -29,13 +29,26 @@ export const createUrl = async (
       }
       const groupCode = splitShortCode[0]
 
-      const [group, groupCreated] = await Groups.findCreateFind({
-        where: { prefix: groupCode },
-        defaults: {
-          prefix: groupCode,
-          ownerId: user.id,
-        },
-      })
+      var group: GroupAttributes | null
+      var groupCreated: boolean
+      if (user.role === 'intern') {
+        group = await Groups.find({
+          where: {
+            prefix: groupCode
+          }
+        })
+      } else {
+        [group, groupCreated] = await Groups.findCreateFind({
+          where: { prefix: groupCode },
+          defaults: {
+            prefix: groupCode,
+            ownerId: user.id,
+          },
+        })
+      }
+      if (!group) {
+        throw new Error('Could not find Group Code')
+      }
 
       const opts = optsFromGroupedShortcode(group, splitShortCode[1])
       const [url, urlCreated] = await URLs.findCreateFind({
