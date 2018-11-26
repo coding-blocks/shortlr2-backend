@@ -4,6 +4,7 @@ import passport from 'passport'
 import {
   createUrl,
   findUrlByShortcode,
+  findGroupedUrlByShortcode,
   getAllUrlsForUser,
 } from '../../controllers/urls'
 
@@ -24,6 +25,17 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
+    return res.render('pages/urls/url', { url })
+  } catch (e) {
+    // TODO: Raven
+    req.flash('error', e.message)
+    res.redirect('/urls')
+  }
+})
+
+route.get('/:group/:url', async (req, res) => {
+  try {
+    const url = await findGroupedUrlByShortcode(req.params.group, req.params.url)
     return res.render('pages/urls/url', { url })
   } catch (e) {
     // TODO: Raven

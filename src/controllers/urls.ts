@@ -29,13 +29,46 @@ export const createUrl = async (
       }
       const groupCode = splitShortCode[0]
 
-      const group = await Groups.findCreateFind({
+      const [group, groupCreated] = await Groups.findCreateFind({
         where: { prefix: groupCode },
         defaults: {
           prefix: groupCode,
           ownerId: user.id,
         },
       })
+
+      const opts = optsFromGroupedShortcode(group, splitShortCode[1])
+      const [url, urlCreated] = await URLs.findCreateFind({
+        where: { code: opts.codeInt },
+        defaults: {
+          ownerId: user.id,
+          code: opts.codeInt,
+          codeStr: opts.codeStr,
+          codeActual: opts.codeActual,
+          hits: 0,
+          longUrl: urlOptions.longUrl,
+          private: false
+        }
+      })
+
+      return url
+    } else {
+      // We need to create just the custom short code
+      const opts = optsFromShortcode(urlOptions.shortCode)
+      const [url, urlCreated] = await URLs.findCreateFind({
+        where: { code: opts.codeInt },
+        defaults: {
+          ownerId: user.id,
+          code: opts.codeInt,
+          codeStr: opts.codeStr,
+          codeActual: opts.codeActual,
+          hits: 0,
+          longUrl: urlOptions.longUrl,
+          private: false
+        }
+      })
+
+      return url
     }
   } else {
     // Create Random Shortcode
@@ -55,6 +88,28 @@ export const createUrl = async (
 
 export const findUrlByShortcode = async (shortCode: string) => {
   const opts = optsFromShortcode(shortCode)
+  const url = await URLs.findOne({
+    where: {
+      code: opts.codeInt,
+    },
+  })
+  if (!url) {
+    throw new Error('Could not find shortcode.')
+  }
+  return url!
+}
+
+export const findGroupedUrlByShortcode = async (groupCode: string,shortCode: string) => {
+  const group = await Groups.find({
+    where: {
+      prefix: groupCode
+    }
+  })
+  if (!group) {
+    throw new Error('Could not find groupcode')
+  }
+
+  const opts = optsFromGroupedShortcode(group, shortCode)
   const url = await URLs.findOne({
     where: {
       code: opts.codeInt,

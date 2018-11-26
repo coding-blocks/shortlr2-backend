@@ -39,7 +39,7 @@ export interface URLAttributes {
 
 export const URLs = defineModel<URLAttributes>(db, 'url', {
   code: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.BIGINT,
     primaryKey: true,
   },
   codeStr: {
