@@ -78,6 +78,7 @@ route.post('/', async (req, res) => {
       {
         longUrl: req.body.longUrl,
         shortCode: req.body.shortCode,
+        private: req.body.private,
       },
       req.user,
     )

@@ -10,6 +10,7 @@ import {
 export interface URLOptions {
   longUrl: string
   shortCode?: string
+  private?: boolean
 }
 
 export interface PageOptions {
@@ -32,6 +33,10 @@ export const createUrl = async (
     // Custom shortcodes are not for peasants
     delete urlOptions.shortCode
   }
+  if (urlOptions.private === undefined || ['admin', 'employee'].indexOf(user.role) === -1) {
+    urlOptions.private = false
+  }
+
   let opts: ShortcodeOptions
 
   if (urlOptions.shortCode) {
@@ -67,7 +72,7 @@ export const createUrl = async (
       codeActual: opts.codeActual,
       hits: 0,
       longUrl: urlOptions.longUrl,
-      private: false, // TODO: Add support for making private links
+      private: urlOptions.private,
     })
     return url
   } catch (e) {
