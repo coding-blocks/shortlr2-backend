@@ -9,7 +9,7 @@ import config = require('../config.js')
 import { passport } from './passport/setup'
 import { route as apiRoute } from './routes/api'
 import { route as pagesRoute } from './routes/pages'
-import { ifcontains, ifeq, inc, dec, range } from './utils/handlebar-helpers'
+import { dec, ifcontains, ifeq, inc } from './utils/handlebar-helpers'
 
 const app = express()
 
@@ -33,7 +33,6 @@ hbs.registerHelper('ifeq', ifeq)
 hbs.registerHelper('ifcontains', ifcontains)
 hbs.registerHelper('inc', inc)
 hbs.registerHelper('dec', dec)
-hbs.registerHelper('range', range)
 // Setup HBS engine -------- end -------
 
 // Setup Body parsers -------- start -------

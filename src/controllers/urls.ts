@@ -97,21 +97,21 @@ export const findUrlByCodeInt = async (codeInt: number) =>
   })
 
 export const getAllUrlsForUser = async (
-  user: UserAttributes, 
-  page: PageOptions
+  user: UserAttributes,
+  page: PageOptions,
 ) => {
   const options = {
     where: {
       ownerId: user.id,
     },
-    ...page
+    ...page,
   }
-  const {rows, count} = await URLs.findAndCountAll(options)
+  const { rows, count } = await URLs.findAndCountAll(options)
   const pagination: PaginationOptions = {
     page: Math.floor(page.offset / 20) + 1,
-    pageCount: Math.ceil(count/ 20),
+    pageCount: Math.ceil(count / 20),
     hasPrev: page.offset !== 0,
-    hasNext: page.offset < (count - 20)
+    hasNext: page.offset < count - 20,
   }
-  return [rows!, pagination]
+  return { urls: rows, pagination }
 }

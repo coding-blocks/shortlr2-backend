@@ -28,11 +28,3 @@ export function inc(value, options) {
 export function dec(value, options) {
   return parseInt(value) - 1
 }
-
-export function range(value, options) {
-  var ret = ""
-  for (let i=1; i<=value; i++){
-    ret += options.fn({counter: i})
-  }
-  return ret
-}

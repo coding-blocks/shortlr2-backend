@@ -9,6 +9,7 @@ import {
   findUrlByShortcode,
   getAllUrlsForUser,
   PageOptions,
+  PaginationOptions,
 } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
@@ -20,7 +21,9 @@ route.use(ensureLoggedIn('/login'))
 // Pagination middleware
 route.use((req, res, next) => {
   const LIMIT = 20
-  if (!req.query.page || req.query.page < 0) req.query.page = 1
+  if (!req.query.page || req.query.page < 0) {
+    req.query.page = 1
+  }
   req.query.limit = LIMIT
   next()
 })
@@ -28,10 +31,11 @@ route.use((req, res, next) => {
 route.get('/', async (req, res) => {
   const page: PageOptions = {
     offset: req.query.limit * (req.query.page - 1),
-    limit:  req.query.limit
+    limit: req.query.limit,
   }
-  const [urls, pagination] = await getAllUrlsForUser(req.user, page)
-  return res.render('pages/urls/index', { urls, pagination })
+  const { urls, pagination } = await getAllUrlsForUser(req.user, page)
+  const pageList = [...Array(pagination.pageCount).keys()]
+  return res.render('pages/urls/index', { urls, pagination, pageList })
 })
 
 route.get('/new', (req, res) => {
