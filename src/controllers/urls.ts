@@ -12,7 +12,7 @@ export interface URLOptions {
   shortCode?: string
 }
 
-export interface LimitingOptions {
+export interface PageOptions {
   offset: number
   limit: number
 }
@@ -98,20 +98,20 @@ export const findUrlByCodeInt = async (codeInt: number) =>
 
 export const getAllUrlsForUser = async (
   user: UserAttributes, 
-  limit: LimitingOptions
+  page: PageOptions
 ) => {
   const options = {
     where: {
       ownerId: user.id,
     },
-    ...limit
+    ...page
   }
-  const [urls, urlCount] = await Promise.all([URLs.findAll(options), URLs.count()])
+  const {rows, count} = await URLs.findAndCountAll(options)
   const pagination: PaginationOptions = {
-    page: Math.floor(limit.offset / 20) + 1,
-    pageCount: Math.ceil(urlCount / 20),
-    hasPrev: limit.offset !== 0,
-    hasNext: limit.offset < (urlCount - 20)
+    page: Math.floor(page.offset / 20) + 1,
+    pageCount: Math.ceil(count/ 20),
+    hasPrev: page.offset !== 0,
+    hasNext: page.offset < (count - 20)
   }
-  return [urls!, pagination]
+  return [rows!, pagination]
 }

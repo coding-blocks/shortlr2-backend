@@ -8,7 +8,7 @@ import {
   findUrlByCodeInt,
   findUrlByShortcode,
   getAllUrlsForUser,
-  LimitingOptions,
+  PageOptions,
 } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
@@ -26,11 +26,11 @@ route.use((req, res, next) => {
 })
 
 route.get('/', async (req, res) => {
-  const limit: LimitingOptions = {
+  const page: PageOptions = {
     offset: req.query.limit * (req.query.page - 1),
     limit:  req.query.limit
   }
-  const [urls, pagination] = await getAllUrlsForUser(req.user, limit)
+  const [urls, pagination] = await getAllUrlsForUser(req.user, page)
   return res.render('pages/urls/index', { urls, pagination })
 })
 
