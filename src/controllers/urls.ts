@@ -3,6 +3,7 @@ import {
   genRandomShortcode,
   optsFromGroupedShortcode,
   optsFromShortcode,
+  ShortcodeOptions,
 } from '../utils/shortener'
 
 export interface URLOptions {
