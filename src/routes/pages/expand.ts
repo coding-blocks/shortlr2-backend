@@ -10,12 +10,7 @@ route.get('/:code', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.code)
     res.redirect(url.longUrl)
-    // @ts-ignore
-    URLs.increment('hits', {
-      where: {
-        code: url.code
-      }
-    })
+    url.increment('hits')
   } catch (e) {
     // TODO: Raven
     req.flash('error', e.message)
@@ -35,12 +30,7 @@ route.get('/:group/:code', async (req, res) => {
       throw new Error('Shortcode not found')
     }
     res.redirect(url.longUrl)
-    // @ts-ignore
-    URLs.increment('hits', {
-      where: {
-        code: url.code
-      }
-    })
+    url.increment('hits')
   } catch (e) {
     // TODO: Raven
     req.flash('error', e.message)

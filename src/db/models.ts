@@ -9,7 +9,7 @@ export interface UserAttributes {
   role: UserRole
 }
 
-export const Users = db.define<UserAttributes, UserAttributes>('user', {
+export const Users = db.define<Sequelize.Instance<UserAttributes> & UserAttributes, UserAttributes>('user', {
   role: Sequelize.ENUM(['admin', 'employee', 'intern', 'user']),
   username: {
     type: Sequelize.STRING,
@@ -29,7 +29,7 @@ export interface URLAttributes {
   ownerId?: number
 }
 
-export const URLs = db.define<URLAttributes, URLAttributes>('url', {
+export const URLs = db.define<Sequelize.Instance<URLAttributes> & URLAttributes, URLAttributes>('url', {
   code: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -66,7 +66,7 @@ export interface AuthTokenAttributes {
   userId: number
 }
 
-export const AuthTokens = db.define<AuthTokenAttributes, AuthTokenAttributes>(
+export const AuthTokens = db.define<Sequelize.Instance<AuthTokenAttributes> & AuthTokenAttributes, AuthTokenAttributes>(
   'authToken',
   {
     token: {
@@ -85,7 +85,7 @@ export interface EventAttributes {
   userId?: number
 }
 
-export const Events = db.define<EventAttributes, EventAttributes>('event', {
+export const Events = db.define<Sequelize.Instance<EventAttributes> & EventAttributes, EventAttributes>('event', {
   code: Sequelize.INTEGER,
   fromIP: Sequelize.STRING,
   fromURL: Sequelize.STRING,
@@ -98,7 +98,7 @@ export interface GroupAttributes {
   ownerId?: number
 }
 
-export const Groups = db.define<GroupAttributes, GroupAttributes>('group', {
+export const Groups = db.define<Sequelize.Instance<GroupAttributes> & GroupAttributes, GroupAttributes>('group', {
   prefix: {
     type: Sequelize.STRING,
     allowNull: false,
