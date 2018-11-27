@@ -11,9 +11,19 @@
     <tbody>
         {{#each urls}}
             <tr>
-                <td>{{ inc @index }}</td>
-                <td>{{ this.longUrl }}</td>
-                <td><a href="https://cb.lk/{{ this.codeActual }}"> cb.lk/{{ this.codeActual }} </a></td>
+                <td>
+                  {{ inc @index }}
+                </td>
+                <td>
+                  <a href="{{ this.longUrl }}">
+                    {{ this.longUrl }}
+                  </a>
+                </td>
+                <td>
+                  <a href="https://cb.lk/{{ this.codeActual }}">
+                    cb.lk/{{ this.codeActual }}
+                  </a>
+                </td>
             </tr>
         {{/each}}
     </tbody>

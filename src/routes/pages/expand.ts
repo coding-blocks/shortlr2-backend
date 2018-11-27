@@ -8,7 +8,12 @@ export const route = Router()
 route.get('/:code', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.code)
-    return res.redirect(url.longUrl)
+    res.redirect(url.longUrl)
+    // Redirect first, then handle hit increment later
+    // TODO: Generate event too
+    url.increment('hits').catch(err => {
+      // TODO: Raven
+    })
   } catch (e) {
     // TODO: Raven
     req.flash('error', e.message)
