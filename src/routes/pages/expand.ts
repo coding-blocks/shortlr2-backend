@@ -34,6 +34,9 @@ route.get('/:group/:code', async (req, res) => {
       throw new Error('Shortcode not found')
     }
     res.redirect(url.longUrl)
+    url.increment('hits').catch(err => {
+      Raven.captureException(err)
+    })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)

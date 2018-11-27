@@ -2,11 +2,13 @@ import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
 import Raven from 'raven'
+import { findGroupByPrefix } from '../../controllers/groups'
 import {
-  createUrl,
+  createUrl, findUrlByCodeInt,
   findUrlByShortcode,
-  getAllUrlsForUser,
+  getAllUrlsForUser
 } from '../../controllers/urls'
+import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
 
@@ -25,6 +27,25 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
+    return res.render('pages/urls/url', { url })
+  } catch (e) {
+    Raven.captureException(e)
+    req.flash('error', e.message)
+    res.redirect('/urls')
+  }
+})
+
+route.get('/:group/:url', async (req, res) => {
+  try {
+    const group = await findGroupByPrefix(req.params.group)
+    if (!group) {
+      throw new Error('Group prefix does not exist')
+    }
+    const opts = optsFromGroupedShortcode(group, req.params.url)
+    const url = await findUrlByCodeInt(opts.codeInt)
+    if (!group) {
+      throw new Error('Shortcode does not exist')
+    }
     return res.render('pages/urls/url', { url })
   } catch (e) {
     Raven.captureException(e)
