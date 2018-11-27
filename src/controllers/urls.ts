@@ -1,4 +1,10 @@
-import { Groups, URLAttributes, URLs, UserAttributes, GroupAttributes } from '../db'
+import {
+  GroupAttributes,
+  Groups,
+  URLAttributes,
+  URLs,
+  UserAttributes,
+} from '../db'
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
@@ -20,6 +26,7 @@ export const createUrl = async (
     delete urlOptions.shortCode
   }
 
+  let opts
   if (urlOptions.shortCode) {
     if (urlOptions.shortCode.indexOf('/') !== -1) {
       // We need to create a grouped short code
@@ -28,17 +35,17 @@ export const createUrl = async (
         throw new Error('Invalid shortcode syntax')
       }
       const groupCode = splitShortCode[0]
-
-      var group: GroupAttributes | null
-      var groupCreated: boolean
+      let group: GroupAttributes | null
+      let groupCreated: boolean
       if (user.role === 'intern') {
+        // Interns can't create group but can use it
         group = await Groups.find({
           where: {
-            prefix: groupCode
-          }
+            prefix: groupCode,
+          },
         })
       } else {
-        [group, groupCreated] = await Groups.findCreateFind({
+        ;[group, groupCreated] = await Groups.findCreateFind({
           where: { prefix: groupCode },
           defaults: {
             prefix: groupCode,
@@ -49,54 +56,28 @@ export const createUrl = async (
       if (!group) {
         throw new Error('Could not find Group Code')
       }
-
-      const opts = optsFromGroupedShortcode(group, splitShortCode[1])
-      const [url, urlCreated] = await URLs.findCreateFind({
-        where: { code: opts.codeInt },
-        defaults: {
-          ownerId: user.id,
-          code: opts.codeInt,
-          codeStr: opts.codeStr,
-          codeActual: opts.codeActual,
-          hits: 0,
-          longUrl: urlOptions.longUrl,
-          private: false
-        }
-      })
-
-      return url
+      opts = optsFromGroupedShortcode(group, splitShortCode[1])
     } else {
       // We need to create just the custom short code
-      const opts = optsFromShortcode(urlOptions.shortCode)
-      const [url, urlCreated] = await URLs.findCreateFind({
-        where: { code: opts.codeInt },
-        defaults: {
-          ownerId: user.id,
-          code: opts.codeInt,
-          codeStr: opts.codeStr,
-          codeActual: opts.codeActual,
-          hits: 0,
-          longUrl: urlOptions.longUrl,
-          private: false
-        }
-      })
-
-      return url
+      opts = optsFromShortcode(urlOptions.shortCode)
     }
   } else {
     // Create Random Shortcode
-    const opts = genRandomShortcode()
-    const url = await URLs.create({
+    opts = genRandomShortcode()
+  }
+  const [url, urlCreated] = await URLs.findCreateFind({
+    where: { code: opts.codeInt },
+    defaults: {
       ownerId: user.id,
       code: opts.codeInt,
       codeStr: opts.codeStr,
       codeActual: opts.codeActual,
       hits: 0,
       longUrl: urlOptions.longUrl,
-      private: false, // TODO: Add support for making private links
-    })
-    return url
-  }
+      private: false,
+    },
+  })
+  return url
 }
 
 export const findUrlByShortcode = async (shortCode: string) => {
@@ -112,11 +93,14 @@ export const findUrlByShortcode = async (shortCode: string) => {
   return url!
 }
 
-export const findGroupedUrlByShortcode = async (groupCode: string,shortCode: string) => {
+export const findGroupedUrlByShortcode = async (
+  groupCode: string,
+  shortCode: string,
+) => {
   const group = await Groups.find({
     where: {
-      prefix: groupCode
-    }
+      prefix: groupCode,
+    },
   })
   if (!group) {
     throw new Error('Could not find groupcode')

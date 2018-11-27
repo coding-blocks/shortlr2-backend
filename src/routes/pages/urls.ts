@@ -3,8 +3,8 @@ import { Router } from 'express'
 import passport from 'passport'
 import {
   createUrl,
-  findUrlByShortcode,
   findGroupedUrlByShortcode,
+  findUrlByShortcode,
   getAllUrlsForUser,
 } from '../../controllers/urls'
 
@@ -35,7 +35,10 @@ route.get('/:url', async (req, res) => {
 
 route.get('/:group/:url', async (req, res) => {
   try {
-    const url = await findGroupedUrlByShortcode(req.params.group, req.params.url)
+    const url = await findGroupedUrlByShortcode(
+      req.params.group,
+      req.params.url,
+    )
     return res.render('pages/urls/url', { url })
   } catch (e) {
     // TODO: Raven
