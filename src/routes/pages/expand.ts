@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { findGroupByPrefix } from '../../controllers/groups'
 import { findUrlByCodeInt, findUrlByShortcode } from '../../controllers/urls'
-import { optsFromGroupedShortcode } from '../../utils/shortener'
 import { URLs } from '../../db'
+import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
 
