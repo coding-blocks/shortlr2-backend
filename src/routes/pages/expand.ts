@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import Raven from 'raven'
 import { findGroupByPrefix } from '../../controllers/groups'
 import { findUrlByCodeInt, findUrlByShortcode } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
@@ -12,10 +13,10 @@ route.get('/:code', async (req, res) => {
     // Redirect first, then handle hit increment later
     // TODO: Generate event too
     url.increment('hits').catch(err => {
-      // TODO: Raven
+      Raven.captureException(err)
     })
   } catch (e) {
-    // TODO: Raven
+    Raven.captureException(e)
     req.flash('error', e.message)
     res.redirect('/urls')
   }
@@ -34,7 +35,7 @@ route.get('/:group/:code', async (req, res) => {
     }
     res.redirect(url.longUrl)
   } catch (e) {
-    // TODO: Raven
+    Raven.captureException(e)
     req.flash('error', e.message)
     res.redirect('/urls')
   }

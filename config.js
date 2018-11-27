@@ -18,5 +18,8 @@ module.exports = {
     CLIENT_ID: secrets.ONEAUTH_CLIENT_ID,
     CLIENT_SECRET: secrets.ONEAUTH_CLIENT_SECRET,
     CALLBACK_URL: '/login/callback'
+  },
+  RAVEN: {
+    DSN: secrets.SENTRY_DSN
   }
 }

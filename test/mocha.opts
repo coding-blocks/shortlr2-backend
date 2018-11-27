@@ -1,0 +1,9 @@
+
+###
+### mocha.opts
+###
+
+--require ts-node/register
+--watch-extensions ts
+--ui bdd
+--timeout 2000

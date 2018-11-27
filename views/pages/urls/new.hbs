@@ -8,6 +8,7 @@
       Create a tiny new link. Grab eyeballs!
     </p>
     <form class="form-group" action="/urls" method="post"> <!-- TODO: Add validation -->
+      {{> error-snippet}}
 
       <div class="form-group">
         <label class="ml-2" for="longUrl">URL to shorten</label>

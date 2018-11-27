@@ -3,6 +3,7 @@ import flash from 'express-flash'
 import hbs from 'express-hbs'
 import session from 'express-session'
 import path from 'path'
+import Raven from 'raven'
 import config = require('../config.js')
 
 import { passport } from './passport/setup'
@@ -11,6 +12,11 @@ import { route as pagesRoute } from './routes/pages'
 import { ifcontains, ifeq, inc } from './utils/handlebar-helpers'
 
 const app = express()
+
+// Setup Raven ------------ start -------------
+Raven.config(config.RAVEN.DSN).install()
+app.use(Raven.requestHandler())
+// Setup Raven ------------ end -------------
 
 // Setup HBS engine -------- start -------
 app.engine(
@@ -47,5 +53,7 @@ app.use(passport.session())
 app.use('/api', apiRoute)
 app.use('/', express.static(path.join(__dirname, '../public')))
 app.use('/', pagesRoute)
+
+app.use(Raven.errorHandler())
 
 export { app }

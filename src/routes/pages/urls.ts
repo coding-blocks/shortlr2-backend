@@ -1,6 +1,7 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
+import Raven from 'raven'
 import {
   createUrl,
   findUrlByShortcode,
@@ -26,7 +27,7 @@ route.get('/:url', async (req, res) => {
     const url = await findUrlByShortcode(req.params.url)
     return res.render('pages/urls/url', { url })
   } catch (e) {
-    // TODO: Raven
+    Raven.captureException(e)
     req.flash('error', e.message)
     res.redirect('/urls')
   }
@@ -46,7 +47,7 @@ route.post('/', async (req, res) => {
     }
     res.redirect(`/urls/${url.codeActual}`)
   } catch (e) {
-    // TODO: Raven
+    Raven.captureException(e)
     req.flash('error', e.message)
     res.redirect('/urls/new')
   }

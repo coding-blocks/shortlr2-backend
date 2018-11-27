@@ -46,7 +46,9 @@ export function optsFromGroupedShortcode(
     tempCode += '0'
   }
   if (tempCode.length > 9) {
-    throw new Error('Code length larger than supported size of 9')
+    throw new Error(
+      'Code length larger than supported size of 8 for grouped codes',
+    )
   }
   return {
     codeStr: tempCode,

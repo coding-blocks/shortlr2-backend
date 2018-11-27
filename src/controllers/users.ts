@@ -1,3 +1,4 @@
+import Raven from 'raven'
 import { UserRole, Users } from '../db'
 
 export const findUserById = async userId => {
@@ -8,7 +9,7 @@ export const findUserById = async userId => {
     }
     return user
   } catch (e) {
-    // TODO: Raven
+    Raven.captureException(e)
     throw e
   }
 }
@@ -26,7 +27,7 @@ export const findCreateFindUser = async (newUser: {
     })
     return user
   } catch (e) {
-    // TODO: Raven
+    Raven.captureException(e)
     throw e
   }
 }

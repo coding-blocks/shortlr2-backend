@@ -2,6 +2,7 @@ import debug from 'debug'
 import passport from 'passport'
 import { OneauthProfile, Strategy as OneauthStrategy } from 'passport-oneauth'
 import * as path from 'path'
+import Raven from 'raven'
 import config = require('../../config.js')
 import { findCreateFindUser, findUserById } from '../controllers/users'
 import { UserAttributes, UserRole } from '../db'
@@ -18,7 +19,7 @@ passport.deserializeUser((userId: number, done) => {
       done(null, user)
     })
     .catch(err => {
-      // TODO: Raven
+      Raven.captureException(err)
       done(err)
     })
 })
@@ -43,6 +44,7 @@ passport.use(
         })
         return done(null, user)
       } catch (e) {
+        Raven.captureException(e)
         done(e)
       }
     },

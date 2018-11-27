@@ -1,3 +1,4 @@
+import Raven from 'raven'
 import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
 import {
   genRandomShortcode,
@@ -19,6 +20,7 @@ export const createUrl = async (
     // Custom shortcodes are not for peasants
     delete urlOptions.shortCode
   }
+  let opts: ShortcodeOptions
 
   if (urlOptions.shortCode) {
     if (urlOptions.shortCode.indexOf('/') !== -1) {
@@ -29,17 +31,23 @@ export const createUrl = async (
       }
       const groupCode = splitShortCode[0]
 
-      const group = await Groups.findCreateFind({
+      const [group, created] = await Groups.findCreateFind({
         where: { prefix: groupCode },
         defaults: {
           prefix: groupCode,
           ownerId: user.id,
         },
       })
+      opts = optsFromGroupedShortcode(group, splitShortCode[1])
+    } else {
+      // We need to create custom (but not grouped) shortcode
+      opts = optsFromShortcode(urlOptions.shortCode)
     }
   } else {
     // Create Random Shortcode
-    const opts = genRandomShortcode()
+    opts = genRandomShortcode()
+  }
+  try {
     const url = await URLs.create({
       ownerId: user.id,
       code: opts.codeInt,
@@ -50,6 +58,9 @@ export const createUrl = async (
       private: false, // TODO: Add support for making private links
     })
     return url
+  } catch (e) {
+    Raven.captureException(e)
+    throw e
   }
 }
 
