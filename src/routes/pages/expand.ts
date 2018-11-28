@@ -15,7 +15,6 @@ route.get('/:code', async (req, res) => {
         return res.render('pages/urls/private')
       }
     }
-
     res.redirect(url.longUrl)
     // Redirect first, then handle hit increment later
     createEvent(url, req, req.user)
@@ -40,7 +39,13 @@ route.get('/:group/:code', async (req, res) => {
     if (!url) {
       throw new Error('Shortcode not found')
     }
+    if (url.private) {
+      if (!req.isAuthenticated()) {
+        return res.render('pages/urls/private')
+      }
+    }
     res.redirect(url.longUrl)
+    createEvent(url, req, req.user)
     url.increment('hits').catch(err => {
       Raven.captureException(err)
     })
