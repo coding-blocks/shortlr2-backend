@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import Raven from 'raven'
+import { createEvent } from '../../controllers/events'
 import { findGroupByPrefix } from '../../controllers/groups'
 import { findUrlByCodeInt, findUrlByShortcode } from '../../controllers/urls'
-import { createEvent } from '../../controllers/events'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
