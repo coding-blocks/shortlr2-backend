@@ -86,7 +86,7 @@ export interface EventAttributes {
   id?: number
   code: number
   fromIP: string
-  fromURL: string
+  fromURL?: string
   userId?: number
 }
 
