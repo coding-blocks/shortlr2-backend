@@ -34,7 +34,7 @@ route.get('/', async (req, res) => {
     limit: req.query.limit,
   }
   const { urls, pagination } = await getAllUrlsForUser(req.user, page)
-  const pageList = [...Array(pagination.pageCount).keys()]
+  const pageList = Array.from({length: pagination.pageCount}, (v, k) => k+1);
   return res.render('pages/urls/index', { urls, pagination, pageList })
 })
 

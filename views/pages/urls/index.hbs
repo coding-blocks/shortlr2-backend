@@ -8,7 +8,7 @@
             <a class="page-link" href="?page={{ dec pagination.page }}" tabindex="-1">Previous</a>
         </li>
         {{#each pageList}}
-            <li class="page-item"><a class="page-link" href="?page={{ inc this }}">{{ inc this }}</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ this }}">{{ this }}</a></li>
         {{/each}}
         <li class="page-item {{#unless pagination.hasNext}}disabled{{/unless}}">
             <a class="page-link" href="?page={{ inc pagination.page }}">Next</a>
