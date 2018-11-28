@@ -9,7 +9,7 @@ export const createEvent = async (
   try {
     const event = Events.create({
       code: url.code,
-      fromIP: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+      fromIP: req.clientIp,
       fromURL: req.query.referer || null,
       userId: user ? user.id : undefined,
     })

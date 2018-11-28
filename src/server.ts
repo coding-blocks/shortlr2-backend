@@ -4,6 +4,7 @@ import hbs from 'express-hbs'
 import session from 'express-session'
 import path from 'path'
 import Raven from 'raven'
+import requestIp from 'request-ip'
 import config = require('../config.js')
 
 import { passport } from './passport/setup'
@@ -50,6 +51,10 @@ app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 // Setup Session and Passport ---------- end -----------
+
+// Setup Client IP collection ---------- start -----------
+app.use(requestIp.mw())
+// Setup Client IP collection ---------- end -----------
 
 app.use('/api', apiRoute)
 app.use('/', express.static(path.join(__dirname, '../public')))
