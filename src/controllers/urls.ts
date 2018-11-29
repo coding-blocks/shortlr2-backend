@@ -1,5 +1,11 @@
 import Raven from 'raven'
-import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
+import {
+  GroupAttributes,
+  Groups,
+  URLAttributes,
+  URLs,
+  UserAttributes,
+} from '../db'
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
@@ -82,6 +88,27 @@ export const createUrl = async (
     Raven.captureException(e)
     throw e
   }
+}
+
+export const updateUrl = async (
+  shortCode: string,
+  newUrl: URLOptions,
+  user: UserAttributes,
+  group: GroupAttributes | null = null,
+) => {
+  const opts = group
+    ? optsFromGroupedShortcode(group, shortCode)
+    : optsFromShortcode(shortCode)
+  const [numberOfUpdates, urls] = await URLs.update(newUrl, {
+    where: {
+      code: opts.codeInt,
+      ownerId: user.id,
+    },
+  })
+  if (numberOfUpdates === 0) {
+    throw new Error('Could not find the shortcode for the current User. ')
+  }
+  return opts
 }
 
 export const findUrlByShortcode = async (shortCode: string) => {

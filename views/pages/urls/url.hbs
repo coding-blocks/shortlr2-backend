@@ -13,13 +13,35 @@
         <p class="card-subtitle text-muted">
           Right-click and select "Copy Link Location" to copy short link
         </p>
-        <p class="card-text mt-4">
+        <div class="card-text mt-4" id="view">
           Original URL
           <br>
           <a href="{{url.longUrl}}">
             {{url.longUrl}}
           </a>
-        </p>
+          <br>
+          {{> error-snippet}}
+          <button class="btn btn-primary mt-4" onclick="toggleEdit()">Edit ✏️</button>
+        </div>
+        <div class="card-text mt-4" id="edit">
+          <form action="/urls/{{url.codeActual}}" method="post">
+            <label class="ml-2" for="longUrl">URL to shorten</label>
+            <input type="url" class="form-control" id="longUrl"
+                   name="longUrl" required value="{{url.longUrl}}"
+                   aria-required="true" aria-describedby="longUrlHelp"
+                   placeholder="eg. https://codingblocks.com/classroom-courses">
+            <small id="longUrlHelp" class="form-text text-muted">We shorten only http and https links</small>
+            {{#ifcontains "admin,employee" user.role}}
+              <div class="form-group">
+                <input type="checkbox" class="form-check-input" id="isPrivate" 
+                name="private" {{#if url.private}}checked{{/if}}/>
+                <label class="form-check-label" for="isPrivate">Private</label>
+              </div>
+            {{/ifcontains}}
+            <button class="btn btn-primary mt-4" type="submit">Submit 📝</button>
+            <button class="btn btn-primary mt-4" onclick="return toggleEdit()">Cancel 🚫</button>
+          </form>
+        </div>
       </div>
       <div class="card-footer">
         <div class="card-subtitle">
@@ -35,3 +57,32 @@
   </div>
   <div class="col"></div>
 </div>
+
+<script>
+  // Show an element
+  function show (elem) {
+    elem.style.display = 'block';
+  };
+  // Hide an element
+  function hide (elem) {
+    elem.style.display = 'none';
+  };
+
+  const view = document.getElementById("view");
+  const edit = document.getElementById("edit");
+  show(view);
+  hide(edit);
+
+  function toggleEdit() {
+    // If the element is visible, hide it
+    if (window.getComputedStyle(view).display === 'block') {
+      hide(view);
+      show(edit);
+      return;
+    }
+    // Otherwise, show it
+    hide(edit);
+    show(view);
+    return false;
+  }
+</script>

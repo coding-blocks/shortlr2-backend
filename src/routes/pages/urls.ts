@@ -8,8 +8,13 @@ import {
   findUrlByCodeInt,
   findUrlByShortcode,
   getAllUrlsForUser,
+<<<<<<< HEAD
   PageOptions,
   PaginationOptions,
+=======
+  updateUrl,
+  URLOptions,
+>>>>>>> private urls can now be updated
 } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
@@ -53,6 +58,21 @@ route.get('/:url', async (req, res) => {
   }
 })
 
+route.post('/:url', async (req, res) => {
+  try {
+    const newUrl: URLOptions = {
+      longUrl: req.body.longUrl,
+      private: req.body.private,
+    }
+    const urlOpts = await updateUrl(req.params.url, newUrl, req.user)
+    res.redirect(`/urls/${urlOpts.codeActual}`)
+  } catch (e) {
+    Raven.captureException(e)
+    req.flash('error', e.message)
+    res.redirect('/urls')
+  }
+})
+
 route.get('/:group/:url', async (req, res) => {
   try {
     const group = await findGroupByPrefix(req.params.group)
@@ -65,6 +85,25 @@ route.get('/:group/:url', async (req, res) => {
       throw new Error('Shortcode does not exist')
     }
     return res.render('pages/urls/url', { url })
+  } catch (e) {
+    Raven.captureException(e)
+    req.flash('error', e.message)
+    res.redirect('/urls')
+  }
+})
+
+route.post('/:group/:url', async (req, res) => {
+  try {
+    const newUrl: URLOptions = {
+      longUrl: req.body.longUrl,
+      private: req.body.private,
+    }
+    const group = await findGroupByPrefix(req.params.group)
+    if (!group) {
+      throw new Error('Group prefic foes not exist')
+    }
+    const urlOpts = await updateUrl(req.params.url, newUrl, req.user, group)
+    res.redirect(`/urls/${urlOpts.codeActual}`)
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
