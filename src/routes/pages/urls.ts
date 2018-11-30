@@ -8,13 +8,10 @@ import {
   findUrlByCodeInt,
   findUrlByShortcode,
   getAllUrlsForUser,
-<<<<<<< HEAD
   PageOptions,
   PaginationOptions,
-=======
   updateUrl,
   URLOptions,
->>>>>>> private urls can now be updated
 } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
@@ -50,7 +47,8 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
-    return res.render('pages/urls/url', { url })
+    const editable = req.user.role === "admin" || req.user.id === url.ownerId
+    return res.render('pages/urls/url', { url, editable })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
@@ -81,10 +79,11 @@ route.get('/:group/:url', async (req, res) => {
     }
     const opts = optsFromGroupedShortcode(group, req.params.url)
     const url = await findUrlByCodeInt(opts.codeInt)
-    if (!group) {
+    if (!url) {
       throw new Error('Shortcode does not exist')
     }
-    return res.render('pages/urls/url', { url })
+    const editable = req.user.role === "admin" || req.user.id === url.ownerId
+    return res.render('pages/urls/url', { url, editable })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
