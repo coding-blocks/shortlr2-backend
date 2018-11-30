@@ -14,6 +14,9 @@ export {
 URLs.belongsTo(Users, { foreignKey: 'ownerId' })
 Users.hasMany(URLs, { foreignKey: 'ownerId' })
 
+URLs.belongsTo(Groups, { foreignKey: 'groupId' })
+Groups.hasMany(URLs, { foreignKey: 'groupId' })
+
 AuthTokens.belongsTo(Users)
 Users.hasMany(AuthTokens)
 
