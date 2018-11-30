@@ -1,5 +1,11 @@
 import Raven from 'raven'
-import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
+import {
+  GroupAttributes,
+  Groups,
+  URLAttributes,
+  URLs,
+  UserAttributes,
+} from '../db'
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
@@ -34,6 +40,7 @@ export const createUrl = async (
   }
   let opts: ShortcodeOptions
 
+  let groupId: number | undefined
   if (urlOptions.shortCode) {
     if (urlOptions.shortCode.indexOf('/') !== -1) {
       // We need to create a grouped short code
@@ -51,6 +58,7 @@ export const createUrl = async (
         },
       })
       opts = optsFromGroupedShortcode(group, splitShortCode[1])
+      groupId = group.id
     } else {
       // We need to create custom (but not grouped) shortcode
       opts = optsFromShortcode(urlOptions.shortCode)
@@ -66,6 +74,7 @@ export const createUrl = async (
       codeStr: opts.codeStr,
       codeActual: opts.codeActual,
       hits: 0,
+      groupId,
       longUrl: urlOptions.longUrl,
       private: false, // TODO: Add support for making private links
     })
@@ -105,8 +114,8 @@ export const getAllUrlsForUser = async (
     where: {
       ownerId: user.id,
     },
-    offset: offset,
-    limit: limit
+    offset,
+    limit,
   }
   const { rows, count } = await URLs.findAndCountAll(options)
   const pagination: PaginationOptions = {

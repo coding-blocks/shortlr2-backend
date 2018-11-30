@@ -35,6 +35,7 @@ export interface URLAttributes {
   hits: number
   private: boolean
   ownerId?: number
+  groupId?: number
 }
 
 export const URLs = defineModel<URLAttributes>(db, 'url', {
@@ -67,6 +68,7 @@ export const URLs = defineModel<URLAttributes>(db, 'url', {
     defaultValue: false,
   },
   ownerId: Sequelize.INTEGER,
+  groupId: Sequelize.INTEGER,
 })
 
 export interface AuthTokenAttributes {
