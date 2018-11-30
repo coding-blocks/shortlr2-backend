@@ -24,3 +24,7 @@ export function inc(value, options) {
   // tslint:disable-next-line:radix
   return parseInt(value) + 1
 }
+
+export function dec(value, options) {
+  return parseInt(value) - 1
+}

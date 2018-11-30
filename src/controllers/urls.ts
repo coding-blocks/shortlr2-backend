@@ -12,6 +12,18 @@ export interface URLOptions {
   shortCode?: string
 }
 
+export interface PageOptions {
+  offset?: number
+  limit?: number
+}
+
+export interface PaginationOptions {
+  page: number
+  pageCount: number
+  hasNext: boolean
+  hasPrev: boolean
+}
+
 export const createUrl = async (
   urlOptions: URLOptions,
   user: UserAttributes,
@@ -84,11 +96,24 @@ export const findUrlByCodeInt = async (codeInt: number) =>
     },
   })
 
-export const getAllUrlsForUser = async (user: UserAttributes) => {
-  const urls = await URLs.findAll({
+export const getAllUrlsForUser = async (
+  user: UserAttributes,
+  page: PageOptions = {},
+) => {
+  const { offset = 0, limit = 50 } = page
+  const options = {
     where: {
       ownerId: user.id,
     },
-  })
-  return urls!
+    offset: offset,
+    limit: limit
+  }
+  const { rows, count } = await URLs.findAndCountAll(options)
+  const pagination: PaginationOptions = {
+    page: Math.floor(offset / limit) + 1,
+    pageCount: Math.ceil(count / limit),
+    hasPrev: offset !== 0,
+    hasNext: offset < count - limit,
+  }
+  return { urls: rows, pagination }
 }
