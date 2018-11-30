@@ -3,7 +3,7 @@ import { db } from './config'
 
 export type UserRole = 'admin' | 'employee' | 'intern' | 'user'
 export interface UserAttributes {
-  id?: number
+  id: number
   username: string
   name?: string
   role: UserRole
@@ -18,6 +18,10 @@ function defineModel<IAttributes>(
 }
 
 export const Users = defineModel<UserAttributes>(db, 'user', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+  },
   role: Sequelize.ENUM(['admin', 'employee', 'intern', 'user']),
   username: {
     type: Sequelize.STRING,
@@ -86,12 +90,12 @@ export interface EventAttributes {
   id?: number
   code: number
   fromIP: string
-  fromURL: string
+  fromURL?: string
   userId?: number
 }
 
 export const Events = defineModel<EventAttributes>(db, 'event', {
-  code: Sequelize.INTEGER,
+  code: Sequelize.BIGINT,
   fromIP: Sequelize.STRING,
   fromURL: Sequelize.STRING,
   userId: Sequelize.INTEGER,

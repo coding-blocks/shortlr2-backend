@@ -1,5 +1,11 @@
 import Raven from 'raven'
-import { Groups, URLAttributes, URLs, UserAttributes } from '../db'
+import {
+  GroupAttributes,
+  Groups,
+  URLAttributes,
+  URLs,
+  UserAttributes,
+} from '../db'
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
@@ -10,6 +16,7 @@ import {
 export interface URLOptions {
   longUrl: string
   shortCode?: string
+  private?: boolean
 }
 
 export interface PageOptions {
@@ -32,6 +39,13 @@ export const createUrl = async (
     // Custom shortcodes are not for peasants
     delete urlOptions.shortCode
   }
+  if (
+    urlOptions.private === undefined ||
+    ['admin', 'employee'].indexOf(user.role) === -1
+  ) {
+    urlOptions.private = false
+  }
+
   let opts: ShortcodeOptions
 
   if (urlOptions.shortCode) {
@@ -67,13 +81,38 @@ export const createUrl = async (
       codeActual: opts.codeActual,
       hits: 0,
       longUrl: urlOptions.longUrl,
-      private: false, // TODO: Add support for making private links
+      private: urlOptions.private,
     })
     return url
   } catch (e) {
     Raven.captureException(e)
     throw e
   }
+}
+
+export const updateUrl = async (
+  shortCode: string,
+  newUrl: URLOptions,
+  user: UserAttributes,
+  group: GroupAttributes | null = null,
+) => {
+  if (["admin", "employee"].indexOf(user.role) === -1) {
+    // Seriously? Trying to get private URLs even if not allowed
+    delete newUrl.private
+  }
+  const opts = group
+    ? optsFromGroupedShortcode(group, shortCode)
+    : optsFromShortcode(shortCode)
+  const [numberOfUpdates, urls] = await URLs.update(newUrl, {
+    where: {
+      code: opts.codeInt,
+      ...(user.role == "admin" ? {} : {ownerId: user.id})
+    },
+  })
+  if (numberOfUpdates === 0) {
+    throw new Error('Could not find the shortcode for the current User. ')
+  }
+  return opts
 }
 
 export const findUrlByShortcode = async (shortCode: string) => {

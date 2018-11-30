@@ -10,6 +10,8 @@ import {
   getAllUrlsForUser,
   PageOptions,
   PaginationOptions,
+  updateUrl,
+  URLOptions,
 } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
@@ -45,7 +47,23 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
-    return res.render('pages/urls/url', { url })
+    const editable = req.user.role === "admin" || req.user.id === url.ownerId
+    return res.render('pages/urls/url', { url, editable })
+  } catch (e) {
+    Raven.captureException(e)
+    req.flash('error', e.message)
+    res.redirect('/urls')
+  }
+})
+
+route.post('/:url', async (req, res) => {
+  try {
+    const newUrl: URLOptions = {
+      longUrl: req.body.longUrl,
+      private: req.body.private,
+    }
+    const urlOpts = await updateUrl(req.params.url, newUrl, req.user)
+    res.redirect(`/urls/${urlOpts.codeActual}`)
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
@@ -61,10 +79,30 @@ route.get('/:group/:url', async (req, res) => {
     }
     const opts = optsFromGroupedShortcode(group, req.params.url)
     const url = await findUrlByCodeInt(opts.codeInt)
-    if (!group) {
+    if (!url) {
       throw new Error('Shortcode does not exist')
     }
-    return res.render('pages/urls/url', { url })
+    const editable = req.user.role === "admin" || req.user.id === url.ownerId
+    return res.render('pages/urls/url', { url, editable })
+  } catch (e) {
+    Raven.captureException(e)
+    req.flash('error', e.message)
+    res.redirect('/urls')
+  }
+})
+
+route.post('/:group/:url', async (req, res) => {
+  try {
+    const newUrl: URLOptions = {
+      longUrl: req.body.longUrl,
+      private: req.body.private,
+    }
+    const group = await findGroupByPrefix(req.params.group)
+    if (!group) {
+      throw new Error('Group prefic foes not exist')
+    }
+    const urlOpts = await updateUrl(req.params.url, newUrl, req.user, group)
+    res.redirect(`/urls/${urlOpts.codeActual}`)
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
@@ -78,6 +116,7 @@ route.post('/', async (req, res) => {
       {
         longUrl: req.body.longUrl,
         shortCode: req.body.shortCode,
+        private: req.body.private,
       },
       req.user,
     )

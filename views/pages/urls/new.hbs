@@ -39,6 +39,18 @@
             Shortcode has to be less than 9 characters
           </small>
         </div>
+        {{#ifcontains "admin,employee" user.role}}
+          <div class="form-group">
+            <div class="row ml-2">
+              <div class="col-md-1">
+                <input type="checkbox" class="form-check-input" id="isPrivate" name="private"/>
+              </div>
+              <div class="col-md-9">
+                <label class="form-check-label" for="isPrivate">Private</label>
+              </div>
+            </div>
+          </div>
+        {{/ifcontains}}
       {{/ifcontains}}
       <div class="row px-2">
         <button class="btn btn-dark col-3" type="reset">Reset ⓧ </button>

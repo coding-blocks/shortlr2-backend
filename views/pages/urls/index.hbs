@@ -32,8 +32,11 @@
                 </td>
                 <td>
                   <a href="{{ this.longUrl }}">
-                    {{ this.longUrl }}
+                    {{ this.longUrl }} 
                   </a>
+                  {{#if this.private }} 
+                    (Private 🤫)
+                  {{/if}}
                 </td>
                 <td>
                   <a href="/urls/{{ this.codeActual }}">

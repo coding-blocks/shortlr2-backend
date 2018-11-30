@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import Raven from 'raven'
+import { createEvent } from '../../controllers/events'
 import { findGroupByPrefix } from '../../controllers/groups'
 import { findUrlByCodeInt, findUrlByShortcode } from '../../controllers/urls'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
@@ -9,16 +10,21 @@ export const route = Router()
 route.get('/:code', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.code)
+    if (url.private) {
+      if (!req.isAuthenticated()) {
+        return res.render('pages/urls/private')
+      }
+    }
     res.redirect(url.longUrl)
     // Redirect first, then handle hit increment later
-    // TODO: Generate event too
+    createEvent(url, req, req.user)
     url.increment('hits').catch(err => {
       Raven.captureException(err)
     })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
-    res.redirect('/urls')
+    res.redirect('/')
   }
 })
 
@@ -33,13 +39,19 @@ route.get('/:group/:code', async (req, res) => {
     if (!url) {
       throw new Error('Shortcode not found')
     }
+    if (url.private) {
+      if (!req.isAuthenticated()) {
+        return res.render('pages/urls/private')
+      }
+    }
     res.redirect(url.longUrl)
+    createEvent(url, req, req.user)
     url.increment('hits').catch(err => {
       Raven.captureException(err)
     })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
-    res.redirect('/urls')
+    res.redirect('/')
   }
 })
