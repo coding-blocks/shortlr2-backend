@@ -95,7 +95,7 @@ export interface EventAttributes {
 }
 
 export const Events = defineModel<EventAttributes>(db, 'event', {
-  code: Sequelize.INTEGER,
+  code: Sequelize.BIGINT,
   fromIP: Sequelize.STRING,
   fromURL: Sequelize.STRING,
   userId: Sequelize.INTEGER,

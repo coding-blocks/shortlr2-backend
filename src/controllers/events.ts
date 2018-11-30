@@ -7,6 +7,9 @@ export const createEvent = async (
   user: UserAttributes | undefined,
 ) => {
   try {
+    if (!/([A-Za-z0-9])\w{1,5}/.test(req.query.referer)) {
+      delete req.query.referer
+    }
     const event = Events.create({
       code: url.code,
       fromIP: req.clientIp,
