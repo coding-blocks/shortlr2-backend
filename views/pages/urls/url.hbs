@@ -11,6 +11,12 @@
           </a>
         </h1>
         <p class="card-subtitle text-muted">
+          {{#if url.private }}
+            <span class="badge badge-pill badge-warning">
+              Private
+            </span>
+            <br>
+          {{/if}}
           Right-click and select "Copy Link Location" to copy short link
         </p>
         <div class="card-text mt-4" id="view">
@@ -22,7 +28,7 @@
           <br>
           {{> error-snippet}}
           {{#if editable}}
-            <button class="btn btn-primary mt-4" onclick="toggleEdit()">Edit ✏️</button>
+            <button class="btn btn-primary mt-4" onclick="editMode()">Edit ✏️</button>
           {{/if}}
         </div>
         {{#if editable}}
@@ -36,13 +42,13 @@
               <small id="longUrlHelp" class="form-text text-muted">We shorten only http and https links</small>
               {{#ifcontains "admin,employee" user.role}}
                 <div class="form-group">
-                  <input type="checkbox" class="form-check-input" id="isPrivate" 
+                  <input type="checkbox" class="form-check-input" id="isPrivate"
                   name="private" {{#if url.private}}checked{{/if}}/>
                   <label class="form-check-label" for="isPrivate">Private</label>
                 </div>
               {{/ifcontains}}
-              <button class="btn btn-primary mt-4" type="submit">Submit 📝</button>
-              <button class="btn btn-primary mt-4" onclick="return toggleEdit()">Cancel 🚫</button>
+              <button class="btn btn-primary mt-4" type="submit">Save 💾</button>
+              <button type="button" class="btn btn-primary mt-4" onclick="viewMode()">Cancel 🚫</button>
             </form>
           </div>
         {{/if}}
@@ -65,17 +71,13 @@
 <script>
   const view = $("#view").show();
   const edit = $("#edit").hide();
+  function editMode() {
+    view.hide();
+    edit.show();
+  }
 
-  function toggleEdit() {
-    // If the element is visible, hide it
-    if (view.is(':visible')) {
-      view.hide();
-      edit.show()
-      return;
-    }
-    // Otherwise, show it
+  function viewMode() {
     edit.hide();
-    view.show()
-    return false;
+    view.show();
   }
 </script>
