@@ -39,10 +39,7 @@ export const createUrl = async (
     // Custom shortcodes are not for peasants
     delete urlOptions.shortCode
   }
-  if (
-    urlOptions.private === undefined ||
-    ['admin', 'employee'].indexOf(user.role) === -1
-  ) {
+  if (!urlOptions.private || ['admin', 'employee'].indexOf(user.role) === -1) {
     urlOptions.private = false
   }
 
