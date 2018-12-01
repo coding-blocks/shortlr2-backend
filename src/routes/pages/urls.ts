@@ -47,7 +47,7 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
-    const editable = req.user.role === "admin" || req.user.id === url.ownerId
+    const editable = req.user.role === 'admin' || req.user.id === url.ownerId
     return res.render('pages/urls/url', { url, editable })
   } catch (e) {
     Raven.captureException(e)
@@ -82,7 +82,7 @@ route.get('/:group/:url', async (req, res) => {
     if (!url) {
       throw new Error('Shortcode does not exist')
     }
-    const editable = req.user.role === "admin" || req.user.id === url.ownerId
+    const editable = req.user.role === 'admin' || req.user.id === url.ownerId
     return res.render('pages/urls/url', { url, editable })
   } catch (e) {
     Raven.captureException(e)

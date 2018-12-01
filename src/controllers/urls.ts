@@ -99,7 +99,7 @@ export const updateUrl = async (
   user: UserAttributes,
   group: GroupAttributes | null = null,
 ) => {
-  if (["admin", "employee"].indexOf(user.role) === -1) {
+  if (['admin', 'employee'].indexOf(user.role) === -1) {
     // Seriously? Trying to get private URLs even if not allowed
     delete newUrl.private
   }
@@ -109,7 +109,7 @@ export const updateUrl = async (
   const [numberOfUpdates, urls] = await URLs.update(newUrl, {
     where: {
       code: opts.codeInt,
-      ...(user.role == "admin" ? {} : {ownerId: user.id})
+      ...(user.role === 'admin' ? {} : { ownerId: user.id }),
     },
   })
   if (numberOfUpdates === 0) {

@@ -21,10 +21,9 @@ export function ifcontains(arr, predicate, options) {
 }
 
 export function inc(value, options) {
-  // tslint:disable-next-line:radix
-  return parseInt(value) + 1
+  return parseInt(value, 10) + 1
 }
 
 export function dec(value, options) {
-  return parseInt(value) - 1
+  return parseInt(value, 10) - 1
 }
