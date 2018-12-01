@@ -5,14 +5,15 @@ module.exports = {
     URL: 'http://localhost:3987' // TODO: Fix properly
   },
   DB: {
-    DATABASE: 'shortlr2',
-    USERNAME: 'shortlr2',
-    PASSWORD: 'shortlr2',
+    DATABASE: secrets.DB.NAME,
+    USERNAME: secrets.DB.USERNAME,
+    PASSWORD: secrets.DB.PASSWORD,
+    HOST: secrets.DB.HOST,
     SYNC_ALTER: process.env.DB_SYNC_ALTER || false,
     SYNC_FORCE: process.env.DB_SYNC_FORCE || false
   },
   SESSION: {
-    SECRET: 'a very long session secret that you must not reveal'
+    SECRET: secrets.SESSION_SECRET
   },
   ONEAUTH: {
     CLIENT_ID: secrets.ONEAUTH_CLIENT_ID,
