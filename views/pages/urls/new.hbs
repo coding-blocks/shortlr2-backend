@@ -102,17 +102,17 @@
     return url.href
   }
 
-  const longUrl = $("#longUrl")[0]
+  const longUrl = $("#longUrl")
   const source = $("#utm_source")
   source.on('blur', () => {
-    longUrl.value = addParam(longUrl.value, {utm_source: source[0].value})
+    longUrl.val(addParam(longUrl.val(), {utm_source: source.val()}))
   })
   const medium = $("#utm_medium")
   medium.on('blur', () => {
-    longUrl.value = addParam(longUrl.value, {utm_medium: medium[0].value})
+    longUrl.val(addParam(longUrl.val(), {utm_medium: medium.val()}))
   })
   const name = $("#utm_name")
   name.on('blur', () => {
-    longUrl.value = addParam(longUrl.value, {utm_name: name[0].value})
+    longUrl.val(addParam(longUrl.val(), {utm_name: name.val()}))
   })
 </script>
