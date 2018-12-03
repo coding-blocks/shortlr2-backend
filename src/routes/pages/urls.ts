@@ -3,7 +3,6 @@ import { Router } from 'express'
 import passport from 'passport'
 import Raven from 'raven'
 import { findGroupByPrefix } from '../../controllers/groups'
-import querystring from 'querystring'
 import {
   createUrl,
   findUrlByCodeInt,
@@ -20,12 +19,6 @@ export const route = Router()
 
 // The entire URLs area is for logged in people only
 route.use(ensureLoggedIn('/login'))
-
-export interface CampaignOptions {
-  utm_source?: string
-  utm_medium?: string
-  utm_name?: string
-}
 
 // Pagination middleware
 route.use((req, res, next) => {
@@ -119,26 +112,12 @@ route.post('/:group/:url', async (req, res) => {
 
 route.post('/', async (req, res) => {
   try {
-    const campaignOpts: CampaignOptions = {
-      utm_source: req.body.utm_source,
-      utm_medium: req.body.utm_medium,
-      utm_name: req.body.utm_name
-    }
-    // remove null keys
-    Object.keys(campaignOpts).forEach((k) => {
-      if (!campaignOpts[k]) { 
-        delete campaignOpts[k]
-      }
-    })
-    const [longUrl, query] = req.body.longUrl.split('?')
-    const actualQuery = (query ? `${query}&` : '') + querystring.stringify(campaignOpts)
-    const urlOpts: URLOptions = {
-      longUrl: `${longUrl}?${actualQuery}`,
-      shortCode: req.body.shortCode,
-      private: req.body.private,
-    }
     const url = await createUrl(
-      urlOpts,
+      {
+        longUrl: req.body.longUrl,
+        shortCode: req.body.shortCode,
+        private: req.body.private,
+      },
       req.user,
     )
     if (!url) {

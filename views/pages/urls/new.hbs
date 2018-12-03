@@ -24,17 +24,17 @@
 
       <div class="form-group collapse ml-2" id="campaignDetails">
         <label class="ml-2" for="utm_source">Campaign Source </label>
-        <input type="text" class="form-control" id="utm_source" name="utm_source" 
+        <input type="text" class="form-control" id="utm_source"  
                aria-describedby="utm_source_help" placeholder="eg. https://codingblocks.com/classroom-courses">
         <small id="utm_source_help" class="form-text text-muted">The referrer: (e.g. google, newsletter)</small>
 
         <label class="ml-2" for="utm_medium">Campaign Medium</label>
-        <input type="text" class="form-control" id="utm_medium" name="utm_medium" 
+        <input type="text" class="form-control" id="utm_medium"  
                aria-describedby="utm_medium_help" placeholder="eg. https://codingblocks.com/classroom-courses">
         <small id="utm_medium_help" class="form-text text-muted">Marketing medium: (e.g. cpc, banner, email)</small>
 
         <label class="ml-2" for="utm_name">Campaign Name</label>
-        <input type="text" class="form-control" id="utm_name" name="utm_name" 
+        <input type="text" class="form-control" id="utm_name"  
                aria-describedby="utm_name_help" placeholder="eg. https://codingblocks.com/classroom-courses">
         <small id="utm_name_help" class="form-text text-muted">Product, promo code, or slogan (e.g. spring_sale)</small>
       </div>
@@ -79,4 +79,40 @@
     </form>
   </div>
   <div class="col"></div>
-  </div>
+</div>
+
+<script>
+  function removeEmpty(obj){
+    Object.keys(obj).forEach((key) => (obj[key] === "") && delete obj[key]);
+    return obj
+  }
+
+  function addParam(urlString, newParams) {
+    const url = new URL(urlString)
+    let updatedParams
+    if (url.search !== ""){
+      const search = url.search.substring(1)
+      const currentParams = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key===""?value:decodeURIComponent(value) });
+      updatedParams = {...currentParams, ...newParams}
+    } else {
+      updatedParams = newParams
+    }
+    updatedParams = removeEmpty(updatedParams)
+    url.search = $.param(updatedParams)
+    return url.href
+  }
+
+  const longUrl = $("#longUrl")[0]
+  const source = $("#utm_source")
+  source.on('blur', () => {
+    longUrl.value = addParam(longUrl.value, {utm_source: source[0].value})
+  })
+  const medium = $("#utm_medium")
+  medium.on('blur', () => {
+    longUrl.value = addParam(longUrl.value, {utm_medium: medium[0].value})
+  })
+  const name = $("#utm_name")
+  name.on('blur', () => {
+    longUrl.value = addParam(longUrl.value, {utm_name: name[0].value})
+  })
+</script>
