@@ -29,7 +29,7 @@
     "clean": "rimraf .nyc_output dist coverage",
     "build": "tsc",
     "predev": "yarn lint:fix && yarn build",
-    "dev": "cross-env DEBUG=* DB_SYNC_ALTER=true NODE_ENV=development node dist/run.js",
+    "dev": "cross-env DEBUG=* NODE_ENV=development node dist/run.js",
     "prestart": "yarn lint && yarn build && yarn test",
     "start": "cross-env NODE_ENV=production node dist/run.js",
     "lint": "tslint --project .",
