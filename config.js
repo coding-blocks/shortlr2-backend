@@ -1,8 +1,13 @@
 const secrets = require('./secrets')
+let SERVER_URL = (process.env.NODE_ENV === 'production') ? 'https://cb.lk' : 'http://localhost:3987'
+if (process.env.SHORTLR_URL) {
+  SERVER_URL = process.env.SHORTLR_URL
+}
+
 module.exports = {
   SERVER: {
     PORT: process.env.PORT || 3987,
-    URL: 'http://localhost:3987' // TODO: Fix properly
+    URL: SERVER_URL
   },
   DB: {
     DATABASE: secrets.DB.NAME,
