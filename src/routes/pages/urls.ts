@@ -1,6 +1,7 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
+import querystring from 'querystring'
 import Raven from 'raven'
 import { findGroupByPrefix } from '../../controllers/groups'
 import {
@@ -26,17 +27,38 @@ route.use((req, res, next) => {
   if (!req.query.page || req.query.page < 0) {
     req.query.page = 1
   }
-  req.query.limit = LIMIT
+  res.locals.pagination = {
+    page: req.query.page,
+    limit: LIMIT,
+  }
   next()
 })
 
 route.get('/', async (req, res) => {
   const page: PageOptions = {
-    offset: req.query.limit * (req.query.page - 1),
-    limit: req.query.limit,
+    offset: res.locals.pagination.limit * (res.locals.pagination.page - 1),
+    limit: res.locals.pagination.limit,
   }
-  const { urls, pagination } = await getAllUrlsForUser(req.user, page)
-  const pageList = Array.from({ length: pagination.pageCount }, (v, k) => k + 1)
+  let getAll: boolean = false
+  if (req.query.all && req.query.all === 'true') {
+    req.query.all = true
+    getAll = true
+  }
+  const { urls, pagination } = await getAllUrlsForUser(req.user, page, getAll)
+  if (pagination.hasNext) {
+    pagination.nextUrl =
+      '?' + querystring.stringify({ ...req.query, page: pagination.page + 1 })
+  }
+  if (pagination.hasPrev) {
+    pagination.prevUrl =
+      '?' + querystring.stringify({ ...req.query, page: pagination.page - 1 })
+  }
+  const pageList: string[] = Array.from(
+    { length: pagination.pageCount },
+    (v, k) => k + 1,
+  ).map(o => {
+    return '?' + querystring.stringify({ ...req.query, page: o })
+  })
   return res.render('pages/urls/index', { urls, pagination, pageList })
 })
 
