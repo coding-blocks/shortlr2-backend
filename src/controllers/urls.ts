@@ -1,10 +1,12 @@
 import Raven from 'raven'
 import {
+  Events,
   GroupAttributes,
   Groups,
   URLAttributes,
   URLs,
   UserAttributes,
+  Users,
 } from '../db'
 import {
   genRandomShortcode,
@@ -123,6 +125,12 @@ export const findUrlByShortcode = async (shortCode: string) => {
     where: {
       code: opts.codeInt,
     },
+    include: [
+      {
+        model: Events,
+        include: [Users],
+      },
+    ],
   })
   if (!url) {
     throw new Error('Could not find shortcode.')
@@ -135,6 +143,12 @@ export const findUrlByCodeInt = async (codeInt: number) =>
     where: {
       code: codeInt,
     },
+    include: [
+      {
+        model: Events,
+        include: [Users],
+      },
+    ],
   })
 
 export const getAllUrlsForUser = async (

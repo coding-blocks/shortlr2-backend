@@ -1,0 +1,30 @@
+<div class="row mt-4">
+    <div class="col-sm-8 offset-sm-2">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>User Visited</th>
+                    <th>Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each url.events}}
+                    <tr>
+                        <td>
+                            {{ inc @index }}
+                        </td>
+                        <td>
+                            <a href="#">
+                                {{ this.user.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{this.user.username}}
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

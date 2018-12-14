@@ -68,6 +68,10 @@
   <div class="col"></div>
 </div>
 
+{{#if url.private }}
+  {{> stats }}
+{{/if}}
+
 <script>
   const view = $("#view").show();
   const edit = $("#edit").hide();
