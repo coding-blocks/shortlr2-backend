@@ -1,4 +1,5 @@
 import Raven from 'raven'
+import sequelize = require('sequelize')
 import {
   Events,
   GroupAttributes,
@@ -129,6 +130,18 @@ export const findUrlByShortcode = async (shortCode: string) => {
       {
         model: Events,
         include: [Users],
+        attributes: {
+          include: [
+            [
+              sequelize.fn(
+                'to_char',
+                sequelize.col('events.createdAt'),
+                'HH12:MI, dd/mm/yyyy',
+              ),
+              'date',
+            ],
+          ],
+        },
       },
     ],
   })
@@ -147,6 +160,18 @@ export const findUrlByCodeInt = async (codeInt: number) =>
       {
         model: Events,
         include: [Users],
+        attributes: {
+          include: [
+            [
+              sequelize.fn(
+                'to_char',
+                sequelize.col('events.createdAt'),
+                'HH12:MI, dd/mm/yyyy',
+              ),
+              'date',
+            ],
+          ],
+        },
       },
     ],
   })

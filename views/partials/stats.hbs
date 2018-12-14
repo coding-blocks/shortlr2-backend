@@ -6,6 +6,7 @@
                     <th>S.No.</th>
                     <th>User Visited</th>
                     <th>Username</th>
+                    <th>Time Stamp</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,9 @@
                         </td>
                         <td>
                             {{this.user.username}}
+                        </td>
+                        <td>
+                            {{this.dataValues.date}}
                         </td>
                     </tr>
                 {{/each}}
