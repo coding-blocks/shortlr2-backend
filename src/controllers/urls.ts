@@ -146,6 +146,7 @@ export const getAllUrlsForUser = async (
   const options = {
     offset,
     limit,
+    order: [['hits', 'DESC']],
     ...(user.role === 'admin' && getAll
       ? {}
       : {
