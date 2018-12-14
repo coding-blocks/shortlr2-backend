@@ -28,7 +28,9 @@ export interface PaginationOptions {
   page: number
   pageCount: number
   hasNext: boolean
+  nextUrl?: string
   hasPrev: boolean
+  prevUrl?: string
 }
 
 export const createUrl = async (
@@ -138,14 +140,19 @@ export const findUrlByCodeInt = async (codeInt: number) =>
 export const getAllUrlsForUser = async (
   user: UserAttributes,
   page: PageOptions = {},
+  getAll: boolean = false,
 ) => {
   const { offset = 0, limit = 50 } = page
   const options = {
-    where: {
-      ownerId: user.id,
-    },
     offset,
     limit,
+    ...(user.role === 'admin' && getAll
+      ? {}
+      : {
+          where: {
+            ownerId: user.id,
+          },
+        }),
   }
   const { rows, count } = await URLs.findAndCountAll(options)
   const pagination: PaginationOptions = {
