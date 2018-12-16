@@ -3,25 +3,25 @@
 {{> error-snippet}}
 
     <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-end">
+        <ul class="pagination justify-content-end" id="pagination">
             {{#ifeq user.role 'admin'}}
                 <li class="page-item">
-                    <a href="?all=true" class="page-link">All</a>
+                    <button onclick="getAllUrls()" class="page-link">All</button>
                 </li>
             {{/ifeq}}
-            <li class="page-item {{#unless pagination.hasPrev}}disabled{{/unless}}">
-                <a class="page-link" href="{{ pagination.prevUrl }}" tabindex="-1">Previous</a>
+            <li class="page-item" id="prev">
+                <button class="page-link" tabindex="-1" onclick="prevPage()">Previous</button>
             </li>
-            {{#each pageList}}
-                <li class="page-item"><a class="page-link" href="{{ this }}">{{ inc @index }}</a></li>
-            {{/each}}
-            <li class="page-item {{#unless pagination.hasNext}}disabled{{/unless}}">
-                <a class="page-link" href="{{ pagination.nextUrl }}">Next</a>
+            <li class="page-item" id="pageItem">
+                <button class="page-link"></button>
+            </li>
+            <li class="page-item" id="next">
+                <button class="page-link" onclick="nextPage()">Next</button>
             </li>
         </ul>
     </nav>
 
-<table class="table table-striped">
+<table class="table table-striped" id="urlsTable">
     <thead>
         <tr>
             <th>S.No.</th>
@@ -31,28 +31,96 @@
         </tr>
     </thead>
     <tbody>
-        {{#each urls}}
-            <tr>
-                <td>
-                  {{ inc @index }}
-                </td>
-                <td>
-                  <a href="{{ this.longUrl }}">
-                    {{ this.longUrl }} 
-                  </a>
-                  {{#if this.private }} 
-                    (Private 🤫)
-                  {{/if}}
-                </td>
-                <td>
-                  <a href="/urls/{{ this.codeActual }}">
-                    cb.lk/{{ this.codeActual }}
-                  </a>
-                </td>
-                <td>
-                    {{this.hits}}
-                </td>
-            </tr>
-        {{/each}}
+        <tr id="url">
+            <td id="index"></td>
+            <td id="longUrl">
+                <a href="#" id="url"></a>
+                <span id="private"></span>
+            </td>
+            <td id="shortUrl">
+                <a href="#" id="url"></a>
+            </td>
+            <td id="hits"></td>
+        </tr>
     </tbody>
 </table>
+
+<script>
+    const apiEndPoint = "/api/urls"
+    let pagination = {}
+
+    function updateTable(params = {}) {
+
+        const table = $("#urlsTable")
+        const templateRow = table.find("tbody>tr").detach().first()
+
+        const pageItem = $("#pagination>#pageItem").detach().first()
+
+        $.get(apiEndPoint, params, function (response) {
+            response.urls.forEach((url, i) => {
+                const row = templateRow.clone()
+                row.find("#index").text(i+1)
+                
+                const longUrl = row.find("#longUrl")
+                longUrl.find("#url").text(url.longUrl).attr("href", url.longUrl)
+                if (url.private){
+                    longUrl.find("#private").text("(Private 🤫)")
+                } else {
+                    longUrl.find("#private").text("")
+                }
+
+                row.find("#shortUrl>a").text("cb.lk/" + url.codeActual).attr("href", "urls/" + url.codeActual)
+
+                row.find("#hits").text(url.hits)
+
+                table.append(row)
+            })
+
+            pagination = response.pagination
+
+            for (var i=0; i<pagination.pageCount; i++) {
+                const pageItemClone = pageItem.clone()
+
+                pageItemClone.find("button")
+                    .attr("page", i+1)
+                    .text(i+1)
+                    .click((e) => {
+                        const page = e.target.attributes.page
+                        updateTable({
+                            page: page
+                        })
+                    })
+                
+
+                pageItemClone.insertBefore('#pagination>#next')
+            }
+        })
+    }
+
+    function getAllUrls() {
+        updateTable({
+            page: pagination.page,
+            all: true
+        })
+    }
+
+    function nextPage() {
+        if (pagination.hasNext) {
+            updateTable({
+                page: pagination.page + 1
+            })
+        }
+    }
+
+    function prevPage() {
+        if (pagination.hasPrev) {
+            updateTable({
+                page: pagination.page - 1
+            })
+        }
+    }
+
+    $(document).ready(function() {
+        updateTable()
+    })
+</script>
