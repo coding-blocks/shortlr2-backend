@@ -1,8 +1,16 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import querystring from 'querystring'
-import { getAllUrlsForUser, PageOptions } from '../../controllers/urls'
+import Raven from 'raven'
+import { findGroupById, findGroupByPrefix } from '../../controllers/groups'
+import {
+  findUrlByCodeInt,
+  findUrlByShortcode,
+  getAllUrlsForUser,
+  PageOptions,
+} from '../../controllers/urls'
 import paginationMiddleware from '../../middlewares/pagination'
+import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
 
@@ -11,6 +19,12 @@ route.use(ensureLoggedIn('/login'))
 
 // Pagination Middleware
 route.use(paginationMiddleware)
+
+// All are json responses
+route.use((req, res, next) => {
+  res.header('Content-Type', 'application/json')
+  next()
+})
 
 route.get('/', async (req, res) => {
   const page: PageOptions = {
@@ -40,6 +54,35 @@ route.get('/', async (req, res) => {
       })
   }
 
-  res.header('Content-Type', 'application/json')
   res.send(JSON.stringify(urlsAndPagination))
+})
+
+route.get('/:url', async (req, res) => {
+  try {
+    const url = await findUrlByShortcode(req.params.url)
+
+    res.send(JSON.stringify(url))
+  } catch (e) {
+    Raven.captureException(e)
+    res.send(e)
+  }
+})
+
+route.get('/:group/:url', async (req, res) => {
+  try {
+    const group = await findGroupByPrefix(req.params.group)
+    if (!group) {
+      throw new Error('Group prefix does not exist')
+    }
+    const opts = optsFromGroupedShortcode(group, req.params.url)
+    const url = await findUrlByCodeInt(opts.codeInt)
+    if (!url) {
+      throw new Error('Shortcode does not exist')
+    }
+
+    res.send(JSON.stringify(url))
+  } catch (e) {
+    Raven.captureException(e)
+    res.send(e)
+  }
 })
