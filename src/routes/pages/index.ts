@@ -22,5 +22,9 @@ route.use(authRoute)
 route.use(expandRoute)
 
 route.get('/', (req, res) => {
-  res.render('pages/index')
+  let showBomb = true
+  if (req.user) {
+    showBomb = false
+  }
+  res.render('pages/index', { showBomb })
 })
