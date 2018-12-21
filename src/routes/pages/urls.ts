@@ -127,7 +127,7 @@ route.post('/:group/:url', async (req, res) => {
     }
     const group = await findGroupByPrefix(req.params.group)
     if (!group) {
-      throw new Error('Group prefic foes not exist')
+      throw new Error('Group prefix does not exist')
     }
     const urlOpts = await updateUrl(req.params.url, newUrl, req.user, group)
     res.redirect(`/urls/${urlOpts.codeActual}`)
@@ -136,6 +136,15 @@ route.post('/:group/:url', async (req, res) => {
     req.flash('error', e.message)
     res.redirect('/urls')
   }
+})
+
+route.delete('/:group/:url', async (req, res) => {
+  const group = await findGroupByPrefix(req.params.group)
+  if (!group) {
+    throw new Error('Group prefix does not exist')
+  }
+  const deleted = await deleteUrl(req.params.url, req.user, group)
+  res.send(deleted ? 'deleted' : 'not_authorised')
 })
 
 route.post('/', async (req, res) => {
