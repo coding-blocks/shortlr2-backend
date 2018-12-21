@@ -75,16 +75,24 @@ export const createUrl = async (
     opts = genRandomShortcode()
   }
   try {
-    const url = await URLs.create({
-      ownerId: user.id,
-      code: opts.codeInt,
-      codeStr: opts.codeStr,
-      codeActual: opts.codeActual,
-      hits: 0,
-      groupId,
-      longUrl: urlOptions.longUrl,
-      private: urlOptions.private,
+    const [url, created] = await URLs.findCreateFind({
+      where: {
+        code: opts.codeInt,
+      },
+      defaults: {
+        ownerId: user.id,
+        code: opts.codeInt,
+        codeStr: opts.codeStr,
+        codeActual: opts.codeActual,
+        hits: 0,
+        groupId,
+        longUrl: urlOptions.longUrl,
+        private: urlOptions.private,
+      },
     })
+    if (!created) {
+      throw new Error(`Shortlink already exists at: ${url.longUrl}`)
+    }
     return url
   } catch (e) {
     Raven.captureException(e)
