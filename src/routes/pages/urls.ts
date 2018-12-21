@@ -6,6 +6,7 @@ import Raven from 'raven'
 import { findGroupByPrefix } from '../../controllers/groups'
 import {
   createUrl,
+  deleteUrl,
   findUrlByCodeInt,
   findUrlByShortcode,
   getAllUrlsForUser,
@@ -91,6 +92,11 @@ route.post('/:url', async (req, res) => {
     req.flash('error', e.message)
     res.redirect('/urls')
   }
+})
+
+route.delete('/:url', async (req, res) => {
+  const deleted = await deleteUrl(req.params.url, req.user)
+  res.send(deleted ? 'deleted' : 'not_authorised')
 })
 
 route.get('/:group/:url', async (req, res) => {

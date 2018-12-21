@@ -117,6 +117,22 @@ export const updateUrl = async (
   return opts
 }
 
+export const deleteUrl = async (
+  shortcode: string,
+  user: UserAttributes,
+  group: GroupAttributes | null = null,
+) => {
+  const opts = group
+    ? optsFromGroupedShortcode(group, shortcode)
+    : optsFromShortcode(shortcode)
+  return URLs.destroy({
+    where: {
+      code: opts.codeInt,
+      ...(user.role === 'admin' ? {} : { ownerId: user.id }),
+    },
+  })
+}
+
 export const findUrlByShortcode = async (shortCode: string) => {
   const opts = optsFromShortcode(shortCode)
   const url = await URLs.findOne({
