@@ -29,6 +29,7 @@
           {{> error-snippet}}
           {{#if editable}}
             <button class="btn btn-primary mt-4" onclick="editMode()">Edit ✏️</button>
+            <button class="btn btn-primary mt-4" onclick="deleteLink()">Delete 🗑️️</button>
           {{/if}}
         </div>
         {{#if editable}}
@@ -79,5 +80,20 @@
   function viewMode() {
     edit.hide();
     view.show();
+  }
+
+  function deleteLink() {
+    if (confirm("Are you sure you want to delete?"))
+    $.ajax({
+      url: window.location.href,
+      type: "DELETE",
+      success: (data) => {
+        if (data == "deleted") {
+          window.location.replace("/urls");
+        } else {
+
+        }
+      },
+    })
   }
 </script>
