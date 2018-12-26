@@ -1,10 +1,13 @@
 import Raven from 'raven'
+import sequelize = require('sequelize')
 import {
+  Events,
   GroupAttributes,
   Groups,
   URLAttributes,
   URLs,
   UserAttributes,
+  Users,
 } from '../db'
 import {
   genRandomShortcode,
@@ -147,6 +150,24 @@ export const findUrlByShortcode = async (shortCode: string) => {
     where: {
       code: opts.codeInt,
     },
+    include: [
+      {
+        model: Events,
+        include: [Users],
+        attributes: {
+          include: [
+            [
+              sequelize.fn(
+                'to_char',
+                sequelize.col('events.createdAt'),
+                'HH12:MI, dd/mm/yyyy',
+              ),
+              'date',
+            ],
+          ],
+        },
+      },
+    ],
   })
   if (!url) {
     throw new Error('Could not find shortcode.')
@@ -159,6 +180,24 @@ export const findUrlByCodeInt = async (codeInt: number) =>
     where: {
       code: codeInt,
     },
+    include: [
+      {
+        model: Events,
+        include: [Users],
+        attributes: {
+          include: [
+            [
+              sequelize.fn(
+                'to_char',
+                sequelize.col('events.createdAt'),
+                'HH12:MI, dd/mm/yyyy',
+              ),
+              'date',
+            ],
+          ],
+        },
+      },
+    ],
   })
 
 export const getAllUrlsForUser = async (
