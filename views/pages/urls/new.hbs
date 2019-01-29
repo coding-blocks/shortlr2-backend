@@ -111,8 +111,8 @@
   medium.on('blur', () => {
     longUrl.val(addParam(longUrl.val(), {utm_medium: medium.val()}))
   })
-  const name = $("#utm_campaign")
-  name.on('blur', () => {
-    longUrl.val(addParam(longUrl.val(), {utm_campaign: name.val()}))
+  const campaign = $("#utm_campaign")
+  campaign.on('blur', () => {
+    longUrl.val(addParam(longUrl.val(), {utm_campaign: campaign.val()}))
   })
 </script>
