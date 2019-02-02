@@ -12,7 +12,7 @@ route.get('/:code', async (req, res) => {
     const url = await findUrlByShortcode(req.params.code)
     if (url.private) {
       if (!req.isAuthenticated()) {
-        (req.session as any).returnTo = url.longUrl
+        ;(req.session as any).returnTo = url.longUrl
         return res.render('pages/urls/private')
       }
     }
@@ -42,7 +42,7 @@ route.get('/:group/:code', async (req, res) => {
     }
     if (url.private) {
       if (!req.isAuthenticated()) {
-        (req.session as any).returnTo = url.longUrl
+        ;(req.session as any).returnTo = url.longUrl
         return res.render('pages/urls/private')
       }
     }
