@@ -9,6 +9,7 @@ import {
   UserAttributes,
   Users,
 } from '../db'
+
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
