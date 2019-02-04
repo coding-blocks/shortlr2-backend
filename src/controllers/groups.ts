@@ -1,4 +1,4 @@
-import { Groups } from '../db'
+import { Groups } from '../db/models/Groups'
 
 export const findGroupByPrefix = async (prefix: string) =>
   Groups.findOne({

@@ -1,13 +1,8 @@
-export { db } from './config'
-import { AuthTokens, Events, Groups, URLs, Users } from './models'
-export {
-  UserAttributes,
-  GroupAttributes,
-  EventAttributes,
-  AuthTokenAttributes,
-  URLAttributes,
-  UserRole,
-} from './models'
+import { AuthTokens } from './models/AuthTokens'
+import { Events } from './models/events'
+import { Groups } from './models/Groups'
+import { URLs } from './models/URLs'
+import { Users } from './models/Users'
 
 // Run associations
 

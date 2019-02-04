@@ -1,14 +1,10 @@
 import Raven from 'raven'
 import sequelize = require('sequelize')
-import {
-  Events,
-  GroupAttributes,
-  Groups,
-  URLAttributes,
-  URLs,
-  UserAttributes,
-  Users,
-} from '../db'
+import { Events } from '../db/models/Events'
+import { GroupAttributes, Groups } from '../db/models/Groups'
+import { URLAttributes, URLs } from '../db/models/URLs'
+import { UserAttributes, Users } from '../db/models/Users'
+
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,

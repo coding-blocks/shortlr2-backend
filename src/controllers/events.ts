@@ -1,5 +1,7 @@
 import Raven from 'raven'
-import { EventAttributes, Events, URLAttributes, UserAttributes } from '../db'
+import { EventAttributes, Events } from '../db/models/Events'
+import { URLAttributes } from '../db/models/URLs'
+import { UserAttributes } from '../db/models/Users'
 
 export const createEvent = async (
   url: URLAttributes,
