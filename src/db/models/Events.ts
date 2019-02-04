@@ -1,4 +1,4 @@
-import Sequelize, { DefineModelAttributes, Model } from 'sequelize'
+import Sequelize, { DefineModelAttributes } from 'sequelize'
 import { defineModel } from '../../utils/model-helper'
 import { db } from '../config'
 
