@@ -1,5 +1,5 @@
 import Raven from 'raven'
-import { UserRole, Users } from '../db/models/Users'
+import { UserRole, Users } from '../db'
 
 export const findUserById = async userId => {
   try {
