@@ -7,10 +7,11 @@
                     <th>User Visited</th>
                     <th>Username</th>
                     <th>Time Stamp</th>
+                    <th>Click Count</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each url.events}}
+                {{#each events}}
                     <tr>
                         <td>
                             {{ inc @index }}
@@ -21,10 +22,13 @@
                             </a>
                         </td>
                         <td>
-                            {{this.user.username}}
+                            {{ this.user.username }}
                         </td>
                         <td>
-                            {{this.dataValues.date}}
+                            {{ this.dataValues.date }}
+                        </td>
+                        <td>
+                            {{ this.dataValues.clickCount }}
                         </td>
                     </tr>
                 {{/each}}

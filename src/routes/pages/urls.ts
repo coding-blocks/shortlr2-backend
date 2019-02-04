@@ -3,6 +3,7 @@ import { Router } from 'express'
 import passport from 'passport'
 import querystring from 'querystring'
 import Raven from 'raven'
+import { getEventsOfUrl } from '../../controllers/events'
 import { findGroupByPrefix } from '../../controllers/groups'
 import {
   createUrl,
@@ -70,8 +71,9 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
+    const events = await getEventsOfUrl(url)
     const editable = req.user.role === 'admin' || req.user.id === url.ownerId
-    return res.render('pages/urls/url', { url, editable })
+    return res.render('pages/urls/url', { url, events, editable })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
@@ -110,8 +112,9 @@ route.get('/:group/:url', async (req, res) => {
     if (!url) {
       throw new Error('Shortcode does not exist')
     }
+    const events = await getEventsOfUrl(url)
     const editable = req.user.role === 'admin' || req.user.id === url.ownerId
-    return res.render('pages/urls/url', { url, editable })
+    return res.render('pages/urls/url', { url, events, editable })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
