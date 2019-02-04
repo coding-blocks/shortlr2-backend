@@ -52,6 +52,7 @@ export const getEventsOfUrl = async (url: URLAttributes) => {
           ),
           'date',
         ],
+        [sequelize.fn('count', 'event.id'), 'clickCount'],
       ],
     })
     return events
