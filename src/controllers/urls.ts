@@ -15,6 +15,7 @@ import {
   optsFromShortcode,
   ShortcodeOptions,
 } from '../utils/shortener'
+import { getEventsOfUrl } from './events'
 
 export interface URLOptions {
   longUrl: string
@@ -150,55 +151,26 @@ export const findUrlByShortcode = async (shortCode: string) => {
     where: {
       code: opts.codeInt,
     },
-    include: [
-      {
-        model: Events,
-        include: [Users],
-        attributes: {
-          include: [
-            [
-              sequelize.fn(
-                'to_char',
-                sequelize.col('events.createdAt'),
-                'HH12:MI, dd/mm/yyyy',
-              ),
-              'date',
-            ],
-          ],
-        },
-      },
-    ],
   })
   if (!url) {
     throw new Error('Could not find shortcode.')
   }
-  return url!
+
+  return url
 }
 
-export const findUrlByCodeInt = async (codeInt: number) =>
-  URLs.findOne({
+export const findUrlByCodeInt = async (codeInt: number) => {
+  const url = await URLs.findOne({
     where: {
       code: codeInt,
     },
-    include: [
-      {
-        model: Events,
-        include: [Users],
-        attributes: {
-          include: [
-            [
-              sequelize.fn(
-                'to_char',
-                sequelize.col('events.createdAt'),
-                'HH12:MI, dd/mm/yyyy',
-              ),
-              'date',
-            ],
-          ],
-        },
-      },
-    ],
   })
+  if (!url) {
+    throw new Error('Could not find URL.')
+  }
+
+  return url
+}
 
 export const getAllUrlsForUser = async (
   user: UserAttributes,
