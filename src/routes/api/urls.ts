@@ -23,12 +23,6 @@ route.use(ensureLoggedIn('/login'))
 // Pagination Middleware
 route.use(paginationMiddleware)
 
-// All are json responses
-route.use((req, res, next) => {
-  res.header('Content-Type', 'application/json')
-  next()
-})
-
 route.get('/', async (req, res) => {
   const page: PageOptions = {
     offset: res.locals.pagination.limit * (res.locals.pagination.page - 1),
@@ -57,7 +51,7 @@ route.get('/', async (req, res) => {
       })
   }
 
-  res.send(JSON.stringify(urlsAndPagination))
+  res.json(urlsAndPagination)
 })
 
 route.post('/', async (req, res) => {
@@ -74,7 +68,7 @@ route.post('/', async (req, res) => {
       throw new Error('Error creating shortlink. Try again')
     }
 
-    res.send(url)
+    res.json(url)
   } catch (e) {
     Raven.captureException(e)
     res.send(e)
@@ -85,7 +79,7 @@ route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
 
-    res.send(JSON.stringify(url))
+    res.json(url)
   } catch (e) {
     Raven.captureException(e)
     res.send(e)
@@ -99,7 +93,7 @@ route.post('/:url', async (req, res) => {
       private: req.body.private,
     }
     const urlOpts = await updateUrl(req.params.url, newUrl, req.user)
-    res.send(JSON.stringify(urlOpts))
+    res.json(urlOpts)
   } catch (e) {
     Raven.captureException(e)
     res.send(e)
@@ -118,7 +112,7 @@ route.get('/:group/:url', async (req, res) => {
       throw new Error('Shortcode does not exist')
     }
 
-    res.send(JSON.stringify(url))
+    res.json(url)
   } catch (e) {
     Raven.captureException(e)
     res.send(e)
@@ -137,7 +131,7 @@ route.post('/:group/:url', async (req, res) => {
     }
     const urlOpts = await updateUrl(req.params.url, newUrl, req.user, group)
 
-    res.send(JSON.stringify(urlOpts))
+    res.json(urlOpts)
   } catch (e) {
     Raven.captureException(e)
     res.send(e)
