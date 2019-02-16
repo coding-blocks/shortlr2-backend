@@ -10,7 +10,7 @@
   "dependencies": {
     "connect-ensure-login": "^0.1.1",
     "convert-radix64": "^0.2.0",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "express": "^4.16.4",
     "express-flash": "^0.0.2",
     "express-hbs": "^1.0.4",
