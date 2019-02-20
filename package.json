@@ -40,7 +40,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/connect-ensure-login": "^0.1.4",
-    "@types/debug": "^0.0.31",
+    "@types/debug": "^4.1.2",
     "@types/express": "^4.16.0",
     "@types/express-flash": "^0.0.0",
     "@types/express-session": "^1.15.11",
