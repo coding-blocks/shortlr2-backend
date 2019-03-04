@@ -40,7 +40,7 @@ export const getEventsOfUrl = async (url: URLAttributes) => {
       include: [
         {
           model: Users,
-          attributes: ['username', 'name'],
+          attributes: ['id', 'username', 'name'],
         },
       ],
       attributes: [
