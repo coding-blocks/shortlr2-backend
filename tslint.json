@@ -10,7 +10,8 @@
     "object-literal-sort-keys": false,
     "no-object-literal-type-assertion": false,
     "interface-name": false,
-    "no-bitwise": false
+    "no-bitwise": false,
+    "no-console": false
   },
   "rulesDirectory": [
     "tslint-plugin-prettier"
