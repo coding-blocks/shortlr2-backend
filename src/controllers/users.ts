@@ -18,6 +18,7 @@ export const findCreateFindUser = async (newUser: {
   id: number
   username: string
   name?: string
+  email?: string
   role: UserRole
 }) => {
   try {
