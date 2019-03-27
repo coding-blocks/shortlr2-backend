@@ -9,6 +9,9 @@
           <a href="https://cb.lk/{{url.codeActual}}">
             cb.lk/{{ url.codeActual }}
           </a>
+          <button class="btn btn-primary" data-clipboard-text="https://cb.lk/{{url.codeActual}}">
+            Copy 📋
+          </button>
         </h1>
         <p class="card-subtitle text-muted">
           {{#if url.private }}
@@ -17,7 +20,6 @@
             </span>
             <br>
           {{/if}}
-          Right-click and select "Copy Link Location" to copy short link
         </p>
         <div class="card-text mt-4" id="view">
           Original URL
@@ -29,6 +31,7 @@
           {{> error-snippet}}
           {{#if editable}}
             <button class="btn btn-primary mt-4" onclick="editMode()">Edit ✏️</button>
+            <button class="btn btn-primary mt-4" onclick="deleteLink()">Delete 🗑️️</button>
           {{/if}}
         </div>
         {{#if editable}}
@@ -68,7 +71,13 @@
   <div class="col"></div>
 </div>
 
+{{#if url.private }}
+  {{> stats }}
+{{/if}}
+
 <script>
+  new ClipboardJS('.btn');
+
   const view = $("#view").show();
   const edit = $("#edit").hide();
   function editMode() {
@@ -79,5 +88,20 @@
   function viewMode() {
     edit.hide();
     view.show();
+  }
+
+  function deleteLink() {
+    if (confirm("Are you sure you want to delete?"))
+    $.ajax({
+      url: window.location.href,
+      type: "DELETE",
+      success: (data) => {
+        if (data == "deleted") {
+          window.location.replace("/urls");
+        } else {
+
+        }
+      },
+    })
   }
 </script>

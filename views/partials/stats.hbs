@@ -1,0 +1,39 @@
+<div class="row mt-4">
+    <div class="col-sm-8 offset-sm-2">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>User Visited</th>
+                    <th>Username</th>
+                    <th>Time Stamp</th>
+                    <th>Click Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each events}}
+                    <tr>
+                        <td>
+                            {{ inc @index }}
+                        </td>
+                        <td>
+                            <a href="https://account.codingblocks.com/users/{{ this.user.id }}" target="_blank">
+                                {{ this.user.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ this.user.username }}
+                        </td>
+                        <td>
+                            {{ this.dataValues.date }}
+                        </td>
+                        <td>
+                            {{ this.dataValues.clickCount }}
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+

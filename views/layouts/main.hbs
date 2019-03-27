@@ -5,8 +5,10 @@
   <title>URL Shortener | Coding Blocks</title>
   <script src="/js/jquery-3.3.1.min.js"></script>
   <script src="/js/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>-->
   <!--<script src="https://cdn.jsdelivr.net/npm/@coding-blocks/bootstrap/dist/js/bootstrap.min.js"></script>-->
@@ -17,6 +19,17 @@
 {{> navbar}}
 
 {{{body}}}
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-83327907-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-83327907-4');
+</script>
+
 
 </body>
 </html>

@@ -23,29 +23,34 @@
     open for anyone to use. Only one catch - you need to login using a Coding Blocks account.
   </p>
   <a class="btn btn-outline-primary btn-lg mx-4 my-1" href="https://codingblocks.com" role="button">
-    ← Go to Coding Blocks homepage<span id="timer"> in 4</span>
+    ← Go to Coding Blocks homepage
+    {{#if showBomb}}
+      <span id="timer"> in 4</span>
+    {{/if}}
   </a>
-  <a class="btn btn-outline-dark btn-lg mx-4 my-1" href="/urls" role="button">
+  <a class="btn btn-outline-dark btn-lg mx-4 my-1" href="/urls/new" role="button">
     Create Shortlinks →
   </a>
 </div>
 
-<script>
-  let timebomb = 4
-  let timer = document.getElementById('timer')
-  let ticker = setInterval(() => {
-    timebomb--
-    if (timebomb <= 0) {
-      window.location.href = 'https://codingblocks.com'
+{{#if showBomb}}
+  <script>
+    let timebomb = 4
+    let timer = document.getElementById('timer')
+    let ticker = setInterval(() => {
+      timebomb--
+      if (timebomb <= 0) {
+        window.location.href = 'https://codingblocks.com'
+        clearInterval(ticker)
+      }
+      timer.innerText = ' in ' + timebomb
+    }, 1000)
+  
+    // When mouse enters jumbotron, stop counter
+    timer.parentElement.parentElement.addEventListener
+    ('mouseover', () => {
       clearInterval(ticker)
-    }
-    timer.innerText = ' in ' + timebomb
-  }, 1000)
-
-  // When mouse enters jumbotron, stop counter
-  timer.parentElement.parentElement.addEventListener
-  ('mouseover', () => {
-    clearInterval(ticker)
-    timer.remove()
-  })
-</script>
+      timer.remove()
+    })
+  </script>
+{{/if}}

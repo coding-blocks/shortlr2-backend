@@ -10,7 +10,7 @@
   "dependencies": {
     "connect-ensure-login": "^0.1.1",
     "convert-radix64": "^0.2.0",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "express": "^4.16.4",
     "express-flash": "^0.0.2",
     "express-hbs": "^1.0.4",
@@ -48,7 +48,7 @@
     "@types/passport": "^0.4.7",
     "@types/passport-http-bearer": "^1.0.33",
     "@types/raven": "^2.5.1",
-    "@types/sequelize": "^4.27.30",
+    "@types/sequelize": "^4.27.36",
     "chai": "^4.2.0",
     "cross-env": "^5.2.0",
     "mocha": "^5.2.0",
@@ -57,7 +57,7 @@
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.9",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
+    "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.16.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.1.6"

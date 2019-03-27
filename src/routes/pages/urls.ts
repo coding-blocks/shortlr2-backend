@@ -1,10 +1,13 @@
 import { ensureLoggedIn } from 'connect-ensure-login'
 import { Router } from 'express'
 import passport from 'passport'
+import querystring from 'querystring'
 import Raven from 'raven'
+import { getEventsOfUrl } from '../../controllers/events'
 import { findGroupByPrefix } from '../../controllers/groups'
 import {
   createUrl,
+  deleteUrl,
   findUrlByCodeInt,
   findUrlByShortcode,
   getAllUrlsForUser,
@@ -26,17 +29,38 @@ route.use((req, res, next) => {
   if (!req.query.page || req.query.page < 0) {
     req.query.page = 1
   }
-  req.query.limit = LIMIT
+  res.locals.pagination = {
+    page: req.query.page,
+    limit: LIMIT,
+  }
   next()
 })
 
 route.get('/', async (req, res) => {
   const page: PageOptions = {
-    offset: req.query.limit * (req.query.page - 1),
-    limit: req.query.limit,
+    offset: res.locals.pagination.limit * (res.locals.pagination.page - 1),
+    limit: res.locals.pagination.limit,
   }
-  const { urls, pagination } = await getAllUrlsForUser(req.user, page)
-  const pageList = Array.from({ length: pagination.pageCount }, (v, k) => k + 1)
+  let getAll: boolean = false
+  if (req.query.all && req.query.all === 'true') {
+    req.query.all = true
+    getAll = true
+  }
+  const { urls, pagination } = await getAllUrlsForUser(req.user, page, getAll)
+  if (pagination.hasNext) {
+    pagination.nextUrl =
+      '?' + querystring.stringify({ ...req.query, page: pagination.page + 1 })
+  }
+  if (pagination.hasPrev) {
+    pagination.prevUrl =
+      '?' + querystring.stringify({ ...req.query, page: pagination.page - 1 })
+  }
+  const pageList: string[] = Array.from(
+    { length: pagination.pageCount },
+    (v, k) => k + 1,
+  ).map(o => {
+    return '?' + querystring.stringify({ ...req.query, page: o })
+  })
   return res.render('pages/urls/index', { urls, pagination, pageList })
 })
 
@@ -47,8 +71,9 @@ route.get('/new', (req, res) => {
 route.get('/:url', async (req, res) => {
   try {
     const url = await findUrlByShortcode(req.params.url)
+    const events = await getEventsOfUrl(url)
     const editable = req.user.role === 'admin' || req.user.id === url.ownerId
-    return res.render('pages/urls/url', { url, editable })
+    return res.render('pages/urls/url', { url, events, editable })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
@@ -71,6 +96,11 @@ route.post('/:url', async (req, res) => {
   }
 })
 
+route.delete('/:url', async (req, res) => {
+  const deleted = await deleteUrl(req.params.url, req.user)
+  res.send(deleted ? 'deleted' : 'not_authorised')
+})
+
 route.get('/:group/:url', async (req, res) => {
   try {
     const group = await findGroupByPrefix(req.params.group)
@@ -82,8 +112,9 @@ route.get('/:group/:url', async (req, res) => {
     if (!url) {
       throw new Error('Shortcode does not exist')
     }
+    const events = await getEventsOfUrl(url)
     const editable = req.user.role === 'admin' || req.user.id === url.ownerId
-    return res.render('pages/urls/url', { url, editable })
+    return res.render('pages/urls/url', { url, events, editable })
   } catch (e) {
     Raven.captureException(e)
     req.flash('error', e.message)
@@ -99,7 +130,7 @@ route.post('/:group/:url', async (req, res) => {
     }
     const group = await findGroupByPrefix(req.params.group)
     if (!group) {
-      throw new Error('Group prefic foes not exist')
+      throw new Error('Group prefix does not exist')
     }
     const urlOpts = await updateUrl(req.params.url, newUrl, req.user, group)
     res.redirect(`/urls/${urlOpts.codeActual}`)
@@ -108,6 +139,15 @@ route.post('/:group/:url', async (req, res) => {
     req.flash('error', e.message)
     res.redirect('/urls')
   }
+})
+
+route.delete('/:group/:url', async (req, res) => {
+  const group = await findGroupByPrefix(req.params.group)
+  if (!group) {
+    throw new Error('Group prefix does not exist')
+  }
+  const deleted = await deleteUrl(req.params.url, req.user, group)
+  res.send(deleted ? 'deleted' : 'not_authorised')
 })
 
 route.post('/', async (req, res) => {

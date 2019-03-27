@@ -1,17 +1,22 @@
 import Raven from 'raven'
+import sequelize = require('sequelize')
 import {
+  Events,
   GroupAttributes,
   Groups,
   URLAttributes,
   URLs,
   UserAttributes,
+  Users,
 } from '../db'
+
 import {
   genRandomShortcode,
   optsFromGroupedShortcode,
   optsFromShortcode,
   ShortcodeOptions,
 } from '../utils/shortener'
+import { getEventsOfUrl } from './events'
 
 export interface URLOptions {
   longUrl: string
@@ -28,7 +33,9 @@ export interface PaginationOptions {
   page: number
   pageCount: number
   hasNext: boolean
+  nextUrl?: string
   hasPrev: boolean
+  prevUrl?: string
 }
 
 export const createUrl = async (
@@ -73,16 +80,24 @@ export const createUrl = async (
     opts = genRandomShortcode()
   }
   try {
-    const url = await URLs.create({
-      ownerId: user.id,
-      code: opts.codeInt,
-      codeStr: opts.codeStr,
-      codeActual: opts.codeActual,
-      hits: 0,
-      groupId,
-      longUrl: urlOptions.longUrl,
-      private: urlOptions.private,
+    const [url, created] = await URLs.findCreateFind({
+      where: {
+        code: opts.codeInt,
+      },
+      defaults: {
+        ownerId: user.id,
+        code: opts.codeInt,
+        codeStr: opts.codeStr,
+        codeActual: opts.codeActual,
+        hits: 0,
+        groupId,
+        longUrl: urlOptions.longUrl,
+        private: urlOptions.private,
+      },
     })
+    if (!created) {
+      throw new Error(`Shortlink already exists at: ${url.longUrl}`)
+    }
     return url
   } catch (e) {
     Raven.captureException(e)
@@ -115,6 +130,22 @@ export const updateUrl = async (
   return opts
 }
 
+export const deleteUrl = async (
+  shortcode: string,
+  user: UserAttributes,
+  group: GroupAttributes | null = null,
+) => {
+  const opts = group
+    ? optsFromGroupedShortcode(group, shortcode)
+    : optsFromShortcode(shortcode)
+  return URLs.destroy({
+    where: {
+      code: opts.codeInt,
+      ...(user.role === 'admin' ? {} : { ownerId: user.id }),
+    },
+  })
+}
+
 export const findUrlByShortcode = async (shortCode: string) => {
   const opts = optsFromShortcode(shortCode)
   const url = await URLs.findOne({
@@ -125,27 +156,40 @@ export const findUrlByShortcode = async (shortCode: string) => {
   if (!url) {
     throw new Error('Could not find shortcode.')
   }
-  return url!
+
+  return url
 }
 
-export const findUrlByCodeInt = async (codeInt: number) =>
-  URLs.findOne({
+export const findUrlByCodeInt = async (codeInt: number) => {
+  const url = await URLs.findOne({
     where: {
       code: codeInt,
     },
   })
+  if (!url) {
+    throw new Error('Could not find URL.')
+  }
+
+  return url
+}
 
 export const getAllUrlsForUser = async (
   user: UserAttributes,
   page: PageOptions = {},
+  getAll: boolean = false,
 ) => {
   const { offset = 0, limit = 50 } = page
   const options = {
-    where: {
-      ownerId: user.id,
-    },
     offset,
     limit,
+    order: [['hits', 'DESC']],
+    ...(user.role === 'admin' && getAll
+      ? {}
+      : {
+          where: {
+            ownerId: user.id,
+          },
+        }),
   }
   const { rows, count } = await URLs.findAndCountAll(options)
   const pagination: PaginationOptions = {

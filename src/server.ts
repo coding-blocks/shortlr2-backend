@@ -29,6 +29,7 @@ app.engine(
   }),
 )
 app.set('view engine', 'hbs')
+app.set('view cache', true)
 app.set('views', path.join(__dirname, '../views'))
 hbs.registerHelper('ifeq', ifeq)
 hbs.registerHelper('ifcontains', ifcontains)

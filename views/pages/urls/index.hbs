@@ -2,19 +2,24 @@
 
 {{> error-snippet}}
 
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-end">
-        <li class="page-item {{#unless pagination.hasPrev}}disabled{{/unless}}">
-            <a class="page-link" href="?page={{ dec pagination.page }}" tabindex="-1">Previous</a>
-        </li>
-        {{#each pageList}}
-            <li class="page-item"><a class="page-link" href="?page={{ this }}">{{ this }}</a></li>
-        {{/each}}
-        <li class="page-item {{#unless pagination.hasNext}}disabled{{/unless}}">
-            <a class="page-link" href="?page={{ inc pagination.page }}">Next</a>
-        </li>
-    </ul>
-</nav>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+            {{#ifeq user.role 'admin'}}
+                <li class="page-item">
+                    <a href="?all=true" class="page-link">All</a>
+                </li>
+            {{/ifeq}}
+            <li class="page-item {{#unless pagination.hasPrev}}disabled{{/unless}}">
+                <a class="page-link" href="{{ pagination.prevUrl }}" tabindex="-1">Previous</a>
+            </li>
+            {{#each pageList}}
+                <li class="page-item"><a class="page-link" href="{{ this }}">{{ inc @index }}</a></li>
+            {{/each}}
+            <li class="page-item {{#unless pagination.hasNext}}disabled{{/unless}}">
+                <a class="page-link" href="{{ pagination.nextUrl }}">Next</a>
+            </li>
+        </ul>
+    </nav>
 
 <table class="table table-striped">
     <thead>
@@ -22,6 +27,7 @@
             <th>S.No.</th>
             <th>Actual URL</th>
             <th>Shortened URL</th>
+            <th>Hits 🎯</th>
         </tr>
     </thead>
     <tbody>
@@ -42,6 +48,9 @@
                   <a href="/urls/{{ this.codeActual }}">
                     cb.lk/{{ this.codeActual }}
                   </a>
+                </td>
+                <td>
+                    {{this.hits}}
                 </td>
             </tr>
         {{/each}}

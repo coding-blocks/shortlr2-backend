@@ -250,10 +250,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/sequelize@^4.27.30":
-  version "4.27.30"
-  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.27.30.tgz#ff4a154c24ba733ec7c344cfa318446b13217306"
-  integrity sha512-5DZCTnlLizi7Dk/sZ9ZWI3WxL1eUSH4Rpy5rie394GOIAYSYPBamexl1citj6ZgdbkaNXvJ+RuU1HmipUPA47w==
+"@types/sequelize@^4.27.36":
+  version "4.27.36"
+  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.27.36.tgz#ebeeb9e8a92b9e01ba5dbea87100e906aaaaf362"
+  integrity sha512-iXGpgtdIz3y7jQkj43TG826mpRrLUoeOuF+ykHOUzjI+lXY8DHaN578rzw4NeOqy4fU32y2AokAC0fWQXenStQ==
   dependencies:
     "@types/bluebird" "*"
     "@types/continuation-local-storage" "*"
@@ -701,10 +701,10 @@ debug@^3.1.0:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.0.tgz#373687bffa678b38b1cd91f861b63850035ddc87"
-  integrity sha512-heNPJUJIqC+xB6ayLAMHaIrmN9HKa7aQO8MGqKpvCA+uJYVcvR6l5kgdrhRuwPFHU7P5/A1w0BjByPHwpfTDKg==
+debug@^4.1.0, debug@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
     ms "^2.1.1"
 
@@ -2396,10 +2396,10 @@ tslint-plugin-prettier@^2.0.1:
     lines-and-columns "^1.1.6"
     tslib "^1.7.1"
 
-tslint@^5.11.0:
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.11.0.tgz#98f30c02eae3cde7006201e4c33cb08b48581eed"
-  integrity sha1-mPMMAurjzecAYgHkwzywi0hYHu0=
+tslint@^5.12.1:
+  version "5.12.1"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.12.1.tgz#8cec9d454cf8a1de9b0a26d7bdbad6de362e52c1"
+  integrity sha512-sfodBHOucFg6egff8d1BvuofoOQ/nOeYNfbp7LDlKBcLNrL3lmS5zoiDGyOMdT7YsEXAwWpTdAHwOGOc8eRZAw==
   dependencies:
     babel-code-frame "^6.22.0"
     builtin-modules "^1.1.1"
