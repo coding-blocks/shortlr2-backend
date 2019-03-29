@@ -1,14 +1,14 @@
-const child_process = require('child_process')
-const debug = require('debug')
-const fs = require('fs')
-const path = require('path')
-const Umzug = require('umzug')
-const config = require('../../config')
-const { db } = require('../db')
+import child_process from 'child_process'
+import debug from 'debug'
+import fs from 'fs'
+import path from 'path'
+import Umzug from 'umzug'
+import config from '../../config'
+import { db } from '../db'
 
 const log = debug('scripts:migrate')
 
-const umzug = new Umzug({
+const umzug: Umzug = new Umzug({
   storage: 'sequelize',
   storageOptions: {
     sequelize: db,
@@ -32,18 +32,16 @@ const umzug = new Umzug({
   logging: log,
 })
 
-function logUmzugEvent(eventName) {
-  return (name, migration) => {
-    console.log(`${name} ${eventName}`)
-  }
+const logUmzugEvent = eventName => (name, migration) => {
+  console.log(`${name} ${eventName}`)
 }
 umzug.on('migrating', logUmzugEvent('migrating'))
 umzug.on('migrated', logUmzugEvent('migrated'))
 umzug.on('reverting', logUmzugEvent('reverting'))
 umzug.on('reverted', logUmzugEvent('reverted'))
 
-function cmdStatus() {
-  const result = {}
+const cmdStatus = () => {
+  const result: any = {}
 
   return umzug
     .executed()
@@ -78,36 +76,30 @@ function cmdStatus() {
     })
 }
 
-function cmdMigrate() {
-  return umzug.up()
-}
+const cmdMigrate = () => umzug.up()
 
-function cmdMigrateNext() {
-  return cmdStatus().then(({ executed, pending }) => {
+const cmdMigrateNext = () =>
+  cmdStatus().then(({ executed, pending }) => {
     if (pending.length === 0) {
       return Promise.reject(new Error('No pending migrations'))
     }
     const next = pending[0].name
     return umzug.up({ to: next })
   })
-}
 
-function cmdReset() {
-  return umzug.down({ to: 13 })
-}
+const cmdReset = () => umzug.down({ to: 13 })
 
-function cmdResetPrev() {
-  return cmdStatus().then(({ executed, pending }) => {
+const cmdResetPrev = () =>
+  cmdStatus().then(({ executed, pending }) => {
     if (executed.length === 0) {
       return Promise.reject(new Error('Already at initial state'))
     }
     const prev = executed[executed.length - 1].name
     return umzug.down({ to: prev })
   })
-}
 
-function cmdHardReset() {
-  return new Promise((resolve, reject) => {
+const cmdHardReset = () =>
+  new Promise((resolve, reject) => {
     setImmediate(() => {
       try {
         console.log(`dropdb ${config.DB.DATABASE}`)
@@ -125,22 +117,20 @@ function cmdHardReset() {
       }
     })
   })
-}
 
-function cmdCreate(filename) {
-  return new Promise((resolve, reject) => {
+const cmdCreate = filename =>
+  new Promise((resolve, reject) => {
     fs.writeFile(
       path.join(
         __dirname,
         '../migrations/99_' +
           Math.floor(+new Date() / 1000) +
-          `_${filename}.js`,
+          `_${filename}.ts`,
       ),
       `
-module.exports = {
-  up(query, DataTypes) {
+  export const up = (query, DataTypes) => {
   },
-  down(query, DataTypes) {
+  export const down = (query, DataTypes) => {
   }
 }
     `,
@@ -153,7 +143,6 @@ module.exports = {
       },
     )
   })
-}
 
 const cmd = process.argv[2].trim()
 let executedCmd

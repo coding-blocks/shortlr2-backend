@@ -37,7 +37,7 @@
     "lint:fix": "tslint --fix --project .",
     "test": "mocha",
     "cover": "nyc mocha",
-    "migrate": "ts-node ./src/scripts/migrate.js"
+    "migrate": "ts-node ./src/scripts/migrate.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
