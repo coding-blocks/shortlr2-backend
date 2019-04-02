@@ -44,7 +44,10 @@ passport.use(
           name: profile.name,
         }
         const user = await findCreateFindUser(opts)
-        await user.update(opts)
+        await user.update({
+          ...opts,
+          role: user.role || 'user'
+        })
         return done(null, user)
       } catch (e) {
         Raven.captureException(e)
