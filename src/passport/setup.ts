@@ -46,7 +46,7 @@ passport.use(
         const user = await findCreateFindUser(opts)
         await user.update({
           ...opts,
-          role: user.role || 'user'
+          role: user.role || 'user',
         })
         return done(null, user)
       } catch (e) {
