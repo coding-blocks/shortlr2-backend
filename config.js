@@ -4,7 +4,7 @@ if (process.env.SHORTLR_URL) {
   SERVER_URL = process.env.SHORTLR_URL
 }
 
-module.exports = {
+const config = {
   SERVER: {
     PORT: process.env.PORT || 3987,
     URL: SERVER_URL
@@ -18,7 +18,8 @@ module.exports = {
     SYNC_FORCE: process.env.DB_SYNC_FORCE || false
   },
   SESSION: {
-    SECRET: secrets.SESSION_SECRET
+    SECRET: secrets.SESSION_SECRET,
+    DROP_SESSION: process.env.DROP_SESSION || false
   },
   ONEAUTH: {
     CLIENT_ID: secrets.ONEAUTH_CLIENT_ID,
@@ -29,3 +30,7 @@ module.exports = {
     DSN: secrets.SENTRY_DSN
   }
 }
+
+config.COOKIE_DOMAIN = (process.env.NODE_ENV === 'production') ? 'cb.lk' : null
+
+module.exports = config

@@ -7,6 +7,7 @@ import Raven from 'raven'
 import requestIp from 'request-ip'
 import config = require('../config.js')
 
+import { saveIp, sessionStore } from './middlewares/sessionstore.js'
 import { passport } from './passport/setup'
 import { route as apiRoute } from './routes/api'
 import { route as pagesRoute } from './routes/pages'
@@ -45,9 +46,19 @@ app.use(express.urlencoded({ extended: true }))
 // Setup Session and Passport ---------- start -----------
 app.use(
   session({
+    store: sessionStore,
     secret: config.SESSION.SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: 'shortlr2',
+    cookie: {
+      domain: config.COOKIE_DOMAIN,
+      secure: false,
+      maxAge: 86400000,
+    },
   }),
 )
+app.use(saveIp)
 app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
