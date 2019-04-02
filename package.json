@@ -25,7 +25,7 @@
     "proxy-addr": "^2.0.4",
     "raven": "^2.6.4",
     "request-ip": "^2.1.3",
-    "sequelize": "^4.41.2",
+    "sequelize": "^5.2.9",
     "umzug": "^2.2.0"
   },
   "scripts": {
