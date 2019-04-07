@@ -13,35 +13,42 @@ export interface URLAttributes {
   groupId?: number
 }
 
-export const URLs = defineModel<URLAttributes>(db, 'url', {
-  code: {
-    type: Sequelize.BIGINT,
-    primaryKey: true,
-  },
-  codeStr: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  codeActual: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  longUrl: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      isUrl: true,
+export const URLs = defineModel<URLAttributes>(
+  db,
+  'url',
+  {
+    code: {
+      type: Sequelize.BIGINT,
+      primaryKey: true,
     },
+    codeStr: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    codeActual: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    longUrl: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isUrl: true,
+      },
+    },
+    hits: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
+    private: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    ownerId: Sequelize.INTEGER,
+    groupId: Sequelize.INTEGER,
   },
-  hits: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
+  {
+    paranoid: true,
   },
-  private: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-  },
-  ownerId: Sequelize.INTEGER,
-  groupId: Sequelize.INTEGER,
-})
+)

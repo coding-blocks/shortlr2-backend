@@ -8,11 +8,18 @@ export interface GroupAttributes {
   ownerId?: number
 }
 
-export const Groups = defineModel<GroupAttributes>(db, 'group', {
-  prefix: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
+export const Groups = defineModel<GroupAttributes>(
+  db,
+  'group',
+  {
+    prefix: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    ownerId: Sequelize.INTEGER,
   },
-  ownerId: Sequelize.INTEGER,
-})
+  {
+    paranoid: true,
+  },
+)
