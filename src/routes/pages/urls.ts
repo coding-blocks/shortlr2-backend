@@ -16,6 +16,7 @@ import {
   updateUrl,
   URLOptions,
 } from '../../controllers/urls'
+import paginationMiddleware from '../../middlewares/pagination'
 import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
@@ -24,17 +25,7 @@ export const route = Router()
 route.use(ensureLoggedIn('/login'))
 
 // Pagination middleware
-route.use((req, res, next) => {
-  const LIMIT = 20
-  if (!req.query.page || req.query.page < 0) {
-    req.query.page = 1
-  }
-  res.locals.pagination = {
-    page: req.query.page,
-    limit: LIMIT,
-  }
-  next()
-})
+route.use(paginationMiddleware)
 
 route.get('/', async (req, res) => {
   const page: PageOptions = {
