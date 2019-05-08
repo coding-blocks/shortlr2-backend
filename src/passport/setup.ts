@@ -5,7 +5,7 @@ import * as path from 'path'
 import Raven from 'raven'
 import config = require('../../config.js')
 import { findCreateFindUser, findUserById } from '../controllers/users'
-import { UserAttributes, UserRole } from '../db'
+import { UserAttributes, UserRole, Users } from '../db'
 
 const log = debug('shortlr:auth:oneauth')
 
@@ -36,11 +36,17 @@ passport.use(
     },
     async (accessToken, refreshToken, profile: OneauthProfile, done) => {
       try {
-        const user = await findCreateFindUser({
+        const opts = {
           id: Number(profile.id),
           username: profile.username,
           role: (profile.role || 'user') as UserRole,
+          email: profile.verifiedemail,
           name: profile.name,
+        }
+        const user = await findCreateFindUser(opts)
+        await user.update({
+          ...opts,
+          role: user.role || 'user',
         })
         return done(null, user)
       } catch (e) {

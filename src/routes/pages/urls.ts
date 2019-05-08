@@ -152,6 +152,11 @@ route.delete('/:group/:url', async (req, res) => {
 
 route.post('/', async (req, res) => {
   try {
+    if (!req.user.email) {
+      throw new Error(
+        'Email address not verified. If already verified try logging in again!',
+      )
+    }
     const url = await createUrl(
       {
         longUrl: req.body.longUrl,

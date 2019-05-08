@@ -7,6 +7,7 @@ export type UserRole = 'admin' | 'employee' | 'intern' | 'user'
 export interface UserAttributes {
   id: number
   username: string
+  email?: string
   name?: string
   role: UserRole
 }
@@ -17,6 +18,10 @@ export const Users = defineModel<UserAttributes>(db, 'user', {
     primaryKey: true,
   },
   role: Sequelize.ENUM(['admin', 'employee', 'intern', 'user']),
+  email: {
+    type: Sequelize.STRING,
+    unique: true,
+  },
   username: {
     type: Sequelize.STRING,
     allowNull: false,
