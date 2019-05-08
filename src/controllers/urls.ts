@@ -42,9 +42,13 @@ export const createUrl = async (
   urlOptions: URLOptions,
   user: UserAttributes,
 ) => {
-  if (['admin', 'employee', 'intern'].indexOf(user.role) === -1) {
+  // if (['admin', 'employee', 'intern'].indexOf(user.role) === -1) {
+  //   // Custom shortcodes are not for peasants
+  //   delete urlOptions.shortCode
+  // }
+  if (['admin'].indexOf(user.role) === -1) {
     // Custom shortcodes are not for peasants
-    delete urlOptions.shortCode
+    throw new Error('Cannot create URLs')
   }
   if (!urlOptions.private || ['admin', 'employee'].indexOf(user.role) === -1) {
     urlOptions.private = false
