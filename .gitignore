@@ -67,3 +67,5 @@ typings/
 
 # Secrets
 /secrets.json
+
+.ipynb_*
