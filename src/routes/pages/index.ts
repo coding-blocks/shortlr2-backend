@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { route as authRoute } from './auth'
 import { route as expandRoute } from './expand'
-import { route as urlsRoute } from './urls'
 import { route as extraRoute } from './extras'
+import { route as urlsRoute } from './urls'
 
 export const route = Router()
 
