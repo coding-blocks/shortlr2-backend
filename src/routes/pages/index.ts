@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { route as authRoute } from './auth'
 import { route as expandRoute } from './expand'
 import { route as urlsRoute } from './urls'
+import { route as extraRoute } from './extras'
 
 export const route = Router()
 
@@ -19,6 +20,7 @@ route.use((req, res, next) => {
 
 route.use('/urls', urlsRoute)
 route.use(authRoute)
+route.use(extraRoute)
 route.use(expandRoute)
 
 route.get('/', (req, res) => {

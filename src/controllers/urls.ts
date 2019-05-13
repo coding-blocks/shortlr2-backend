@@ -42,13 +42,8 @@ export const createUrl = async (
   urlOptions: URLOptions,
   user: UserAttributes,
 ) => {
-  // if (['admin', 'employee', 'intern'].indexOf(user.role) === -1) {
-  //   // Custom shortcodes are not for peasants
-  //   delete urlOptions.shortCode
-  // }
-  if (['admin'].indexOf(user.role) === -1) {
-    // Custom shortcodes are not for peasants
-    throw new Error('Cannot create URLs')
+  if (['admin', 'employee', 'intern'].indexOf(user.role) === -1) {
+    throw new Error('Not authorized to create URLs')
   }
   if (!urlOptions.private || ['admin', 'employee'].indexOf(user.role) === -1) {
     urlOptions.private = false
