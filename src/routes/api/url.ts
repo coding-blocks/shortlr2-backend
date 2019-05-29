@@ -39,9 +39,6 @@ route.get('/:group', async (req, res) => {
 route.get('/:group/:code', async (req, res) => {
   try {
     const group = await findGroupByPrefix(req.params.group)
-    if (!group) {
-      throw new Error('URL Group prefix not found. Wrong URL possibly.')
-    }
     const opts = optsFromGroupedShortcode(group, req.params.code)
     const url = await findUrlByCodeInt(opts.codeInt)
 
@@ -64,9 +61,7 @@ route.post('/', async (req, res) => {
       },
       req.user,
     )
-    if (!url) {
-      throw new Error('Error creating shortlink. Try again')
-    }
+    res.json(url)
   } catch (err) {
     Raven.captureException(err)
     res.status(500).json({
