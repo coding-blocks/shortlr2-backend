@@ -26,23 +26,26 @@ passport.deserializeUser((userId: number, done) => {
 
 passport.use(
   'authtoken',
-  new AuthTokenStrategy(async (token, done) => {
-    try {
-      const authToken = await AuthTokens.findOne({
-        where: {
-          token,
-        },
-      })
-      if (authToken) {
-        const user = await Users.findById(authToken.userId)
-        return done(null, user)
+  new AuthTokenStrategy(
+    { headerFields: ['x-authorization-token'] },
+    async (token, done) => {
+      try {
+        const authToken = await AuthTokens.findOne({
+          where: {
+            token,
+          },
+        })
+        if (authToken) {
+          const user = await Users.findById(authToken.userId)
+          return done(null, user)
+        }
+        done(null, false)
+      } catch (err) {
+        Raven.captureException(err)
+        done(err)
       }
-      done(null, false)
-    } catch (err) {
-      Raven.captureException(err)
-      done(err)
-    }
-  }),
+    },
+  ),
 )
 
 passport.use(

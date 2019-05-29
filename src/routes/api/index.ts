@@ -8,3 +8,7 @@ route.use(
     session: false,
   }),
 )
+
+route.get('/', (req, res) => {
+  res.send('APIs')
+})
