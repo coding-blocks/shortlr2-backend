@@ -61,7 +61,7 @@ export const createUrl = async (
       }
       const groupCode = splitShortCode[0]
 
-      const [group, created] = await Groups.findCreateFind({
+      const [group, _] = await Groups.findCreateFind({
         where: { prefix: groupCode },
         defaults: {
           prefix: groupCode,
@@ -78,30 +78,28 @@ export const createUrl = async (
     // Create Random Shortcode
     opts = genRandomShortcode()
   }
-  try {
-    const [url, created] = await URLs.findCreateFind({
-      where: {
-        code: opts.codeInt,
-      },
-      defaults: {
-        ownerId: user.id,
-        code: opts.codeInt,
-        codeStr: opts.codeStr,
-        codeActual: opts.codeActual,
-        hits: 0,
-        groupId,
-        longUrl: urlOptions.longUrl,
-        private: urlOptions.private,
-      },
-    })
-    if (!created) {
-      throw new Error(`Shortlink already exists at: ${url.longUrl}`)
-    }
-    return url
-  } catch (e) {
-    Raven.captureException(e)
-    throw e
+  const [url, created] = await URLs.findCreateFind({
+    where: {
+      code: opts.codeInt,
+    },
+    defaults: {
+      ownerId: user.id,
+      code: opts.codeInt,
+      codeStr: opts.codeStr,
+      codeActual: opts.codeActual,
+      hits: 0,
+      groupId,
+      longUrl: urlOptions.longUrl,
+      private: urlOptions.private,
+    },
+  })
+  if (!created) {
+    throw new Error(`Shortlink already exists at: ${url.longUrl}`)
   }
+  if (!url) {
+    throw new Error('Error creating shortlink. Try again')
+  }
+  return url
 }
 
 export const updateUrl = async (
