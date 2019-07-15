@@ -18,7 +18,7 @@ export const URLs = defineModel<URLAttributes>(
   'url',
   {
     code: {
-      type: Sequelize.BIGINT
+      type: Sequelize.BIGINT,
     },
     codeStr: {
       type: Sequelize.STRING,
