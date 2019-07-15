@@ -78,24 +78,24 @@ export const createUrl = async (
     // Create Random Shortcode
     opts = genRandomShortcode()
   }
-  const [url, created] = await URLs.findCreateFind({
+  const oldUrl = await URLs.findOne({
     where: {
       code: opts.codeInt,
     },
-    defaults: {
-      ownerId: user.id,
-      code: opts.codeInt,
-      codeStr: opts.codeStr,
-      codeActual: opts.codeActual,
-      hits: 0,
-      groupId,
-      longUrl: urlOptions.longUrl,
-      private: urlOptions.private,
-    },
   })
-  if (!created) {
-    throw new Error(`Shortlink already exists at: ${url.longUrl}`)
+  if (oldUrl) {
+    throw new Error(`Shortlink already exists at: ${oldUrl.longUrl}`)
   }
+  const url = await URLs.create({
+    ownerId: user.id,
+    code: opts.codeInt,
+    codeStr: opts.codeStr,
+    codeActual: opts.codeActual,
+    hits: 0,
+    groupId,
+    longUrl: urlOptions.longUrl,
+    private: urlOptions.private,
+  })
   if (!url) {
     throw new Error('Error creating shortlink. Try again')
   }

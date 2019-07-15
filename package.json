@@ -38,6 +38,7 @@
     "start": "cross-env NODE_ENV=production node dist/run.js",
     "lint": "tslint --project .",
     "lint:fix": "tslint --fix --project .",
+    "watch": "nodemon --watch src -e js,ts --exec 'export NODE_PATH=dist && node dist/run.js'",
     "test": "mocha",
     "cover": "nyc mocha",
     "migrate": "ts-node ./src/scripts/migrate.js"

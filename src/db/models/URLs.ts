@@ -24,7 +24,6 @@ export const URLs = defineModel<URLAttributes>(
     codeStr: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
     },
     codeActual: {
       type: Sequelize.STRING,
