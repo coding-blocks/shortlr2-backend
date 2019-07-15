@@ -21,8 +21,8 @@ Groups.hasMany(URLs, { foreignKey: 'groupId' })
 AuthTokens.belongsTo(Users)
 Users.hasMany(AuthTokens)
 
-Events.belongsTo(URLs, { foreignKey: 'code' })
-URLs.hasMany(Events, { foreignKey: 'code' })
+Events.belongsTo(URLs, { foreignKey: 'urlId' })
+URLs.hasMany(Events, { foreignKey: 'urlId' })
 
 Events.belongsTo(Users)
 
