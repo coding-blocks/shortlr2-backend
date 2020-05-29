@@ -10,16 +10,13 @@ import { optsFromGroupedShortcode } from '../../utils/shortener'
 
 export const route = Router()
 
-route.get('/:code', async (req, res) => {
+route.get('/:code', async (req, res, next) => {
   try {
     const url = await findUrlByShortcode(req.params.code)
 
     res.json(url)
   } catch (err) {
-    Raven.captureException(err)
-    res.status(404).json({
-      error: err.message,
-    })
+    next()
   }
 })
 
