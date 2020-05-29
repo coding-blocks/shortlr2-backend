@@ -61,6 +61,8 @@ typings/
 # next.js build output
 .next
 
+docs
+
 # IDEs
 .idea/
 .vscode/
