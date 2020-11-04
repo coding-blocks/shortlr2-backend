@@ -24,7 +24,7 @@ const config = {
   ONEAUTH: {
     CLIENT_ID: secrets.ONEAUTH_CLIENT_ID,
     CLIENT_SECRET: secrets.ONEAUTH_CLIENT_SECRET,
-    CALLBACK_URL: '/login/callback'
+    CALLBACK_URL: SERVER_URL + '/login/callback'
   },
   RAVEN: {
     DSN: secrets.SENTRY_DSN
